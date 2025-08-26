@@ -35,6 +35,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    // Accessor untuk avatar_url
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar 
+            ? asset('storage/' . $this->avatar)  // jika ada avatar tersimpan
+            : asset('images/default-profile.png'); // jika kosong, pakai default
+    }
+
     /**
      * The attributes that should be cast.
      *
