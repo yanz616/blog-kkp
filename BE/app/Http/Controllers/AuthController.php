@@ -121,7 +121,7 @@ class AuthController extends Controller
             'name'     => 'sometimes|string|min:3|max:50',
             'email'    => 'sometimes|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|string|min:6|confirmed',
-            'avatar'   => 'sometimes|image|max:2048',
+            'avatar'   => 'sometimes|file|image|max:2048',
         ], 
         [
             'name.min'         => 'Nama Minimal 3 Karakter',
@@ -144,9 +144,11 @@ class AuthController extends Controller
         
         $data = $validator->validated();
         
+        // error jika field tidak terbaca
         if (empty($data)) {
             return ApiResponse::error("Tidak ada field yang valid", [], 422);
         }
+
         // Hash password jika ada
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
