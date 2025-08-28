@@ -1,5 +1,5 @@
 // import 'package:fe/data/models/request/auth_request.dart';
-// import 'package:fe/presentation/blocs/auth/Auth_event.dart';
+// import 'package:fe/presentation/blocs/auth/auth_event.dart';
 // import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 // import 'package:fe/presentation/blocs/auth/auth_state.dart';
 // import 'package:flutter/material.dart';
@@ -114,7 +114,7 @@
 
 import 'package:fe/data/models/request/auth_request.dart';
 import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
-import 'package:fe/presentation/blocs/auth/Auth_event.dart';
+import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -200,16 +200,16 @@ class _LoginPageState extends State<LoginPage> {
                     final email = _emailController.text.trim();
                     final password = _passwordController.text.trim();
 
-                    context.read<AuthBloc>().add(
-                      LoginEvent(
-                        LoginRequest(email: email, password: password),
-                      ),
-                    );
                     // reset error sebelum request
                     setState(() {
                       _emailError = null;
                       _passwordError = null;
                     });
+                    context.read<AuthBloc>().add(
+                      LoginEvent(
+                        LoginRequest(email: email, password: password),
+                      ),
+                    );
                   },
                   child: const Text("Login"),
                 ),

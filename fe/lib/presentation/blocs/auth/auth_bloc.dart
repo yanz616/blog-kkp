@@ -1,6 +1,6 @@
 import 'package:fe/data/models/response/auth_response.dart';
 import 'package:fe/data/repositories/auth_repository.dart';
-import 'package:fe/presentation/blocs/auth/Auth_event.dart';
+import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<RegisterEvent>((event, emit) async {
       emit(AuthLoading());
-      final response = await repository.register(event.request);
+      final response = await repository.register(event.registerRequest);
 
       if (response is SuccessResponse) {
         emit(AuthSuccess(response.data, response.message));
