@@ -1,35 +1,109 @@
+// import 'dart:convert';
+// import 'package:fe/core/constants/variabel.dart';
+// import 'package:fe/data/models/request/auth_request.dart';
+// import 'package:fe/data/models/response/auth_response.dart';
+// import 'package:fe/data/models/user/user.dart';
+// import 'package:http/http.dart' as http;
+
+// class AuthRepository {
+//   final String baseUrl = Variabel.baseUrl;
+
+//   // Login
+//   Future<dynamic> login(LoginRequest request) async {
+//     final response = await http.post(
+//       Uri.parse('$baseUrl/login'),
+//       body: jsonEncode(request.toJson()),
+//       headers: {'Content-Type': 'application/json'},
+//     );
+
+//     final jsonData = jsonDecode(response.body);
+
+//     // Return SuccessResponse atau ErrorResponse langsung
+//     if (jsonData['success'] == true) {
+//       // print(jsonData['data']);
+//       return SuccessResponse<User>.fromJson(
+//         jsonData,
+//         (json) => User.fromJson(json),
+//       );
+//     } else {
+//       return ErrorResponse.fromJson(jsonData);
+//     }
+//   }
+
+//   // Register
+//   Future<dynamic> register(RegisterRequest request) async {
+//     final response = await http.post(
+//       Uri.parse('$baseUrl/register'),
+//       body: jsonEncode(request.toJson()),
+//       headers: {'Content-Type': 'application/json'},
+//     );
+
+//     final jsonData = jsonDecode(response.body);
+
+//     if (jsonData['success'] == true) {
+//       return SuccessResponse<User>.fromJson(
+//         jsonData,
+//         (json) => User.fromJson(json),
+//       );
+//     } else {
+//       return ErrorResponse.fromJson(jsonData);
+//     }
+//   }
+// }
 import 'dart:convert';
-import 'package:fe/data/models/user/response/error_response_model.dart';
-import 'package:fe/data/models/user/response/success_response_model.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:fe/core/constants/variabel.dart';
-import 'package:fe/data/models/user/request/register_request_model.dart';
+import 'package:fe/data/models/request/auth_request.dart';
+import 'package:fe/data/models/response/auth_response.dart';
+import 'package:http/http.dart' as http;
 
 class AuthRepository {
   final String baseUrl = Variabel.baseUrl;
 
-  Future<dynamic> register(RegisterRequestModel request) async {
-    try {
-      final response = await http.post(
-        Uri.parse("$baseUrl/register"),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: json.encode(request.toJson()),
-      );
+  // Login
+  Future<dynamic> login(LoginRequest request) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      body: jsonEncode(request.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
 
-      final data = json.decode(response.body);
-
-      if (response.statusCode == 201) {
-        return SuccessResponseModel.fromJson(data);
-      } else if (response.statusCode == 422) {
-        return ErrorResponseModel.fromJson(data);
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      if (jsonData['success'] == true) {
+        return SuccessResponse.fromJson(jsonData);
       } else {
-        throw Exception("Unkwon Error : ${response.body}");
+        return ErrorResponse.fromJson(jsonData);
       }
-    } catch (e) {
-      throw Exception("Gagal Terhubung ke Server : $e");
+    } else {
+      // fallback error jika HTTP error
+      return ErrorResponse(
+        success: false,
+        message: 'Server error: ${response.statusCode}',
+      );
+    }
+  }
+
+  // Register
+  Future<dynamic> register(RegisterRequest request) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/register'),
+      body: jsonEncode(request.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      if (jsonData['success'] == true) {
+        return SuccessResponse.fromJson(jsonData);
+      } else {
+        return ErrorResponse.fromJson(jsonData);
+      }
+    } else {
+      return ErrorResponse(
+        success: false,
+        message: 'Server error: ${response.statusCode}',
+      );
     }
   }
 }
