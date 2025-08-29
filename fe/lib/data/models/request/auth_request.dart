@@ -13,14 +13,21 @@ class RegisterRequest {
   final String name;
   final String email;
   final String password;
+  final String passConfirmation;
 
   RegisterRequest({
     required this.name,
     required this.email,
     required this.password,
+    required this.passConfirmation,
   });
 
   Map<String, dynamic> toJson() {
-    return {'name': name, 'email': email, 'password': password};
+    return {
+      'name': name,
+      'email': email,
+      'password': password,
+      'password confirmation': passConfirmation,
+    };
   }
 }

@@ -3,9 +3,9 @@ import 'package:fe/data/models/request/auth_request.dart';
 abstract class AuthEvent {}
 
 class LoginEvent extends AuthEvent {
-  LoginRequest request;
+  LoginRequest loginRequest;
 
-  LoginEvent(this.request);
+  LoginEvent(this.loginRequest);
 }
 
 class RegisterEvent extends AuthEvent {

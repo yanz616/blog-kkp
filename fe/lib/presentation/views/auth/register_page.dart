@@ -2,43 +2,49 @@ import 'package:fe/data/models/request/auth_request.dart';
 import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
-import 'package:fe/presentation/views/auth/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  late TextEditingController _passwordConfirmedController;
 
-  // Simpan error untuk masing-masing field
+  String? _nameError;
   String? _emailError;
   String? _passwordError;
 
   @override
   void initState() {
+    _nameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _passwordConfirmedController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _passwordConfirmedController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSuccess) {
@@ -48,12 +54,13 @@ class _LoginPageState extends State<LoginPage> {
                 backgroundColor: Colors.green,
               ),
             );
-          } else if (state is AuthFailure) {
+          }
+          if (state is AuthFailure) {
             setState(() {
+              _nameError = state.errors['name']?.first;
               _emailError = state.errors['email']?.first;
               _passwordError = state.errors['password']?.first;
             });
-
             if (state.message.isNotEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -66,12 +73,25 @@ class _LoginPageState extends State<LoginPage> {
         },
         builder: (context, state) {
           if (state is AuthLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator());
           }
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsetsGeometry.all(16),
             child: Column(
               children: [
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: "Name",
+                    errorText: _nameError,
+                  ),
+                  onChanged: (_) {
+                    if (_nameError != null) {
+                      setState(() => _nameError = null);
+                    }
+                  },
+                ),
+                Gap(10),
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -84,10 +104,9 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                 ),
-                const SizedBox(height: 10),
+                Gap(10),
                 TextField(
                   controller: _passwordController,
-                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
                     errorText: _passwordError,
@@ -98,41 +117,46 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                 ),
-                const SizedBox(height: 20),
+                Gap(10),
+                TextField(
+                  controller: _passwordConfirmedController,
+                  decoration: InputDecoration(
+                    labelText: "Password Confirmation",
+                    errorText: _passwordError,
+                  ),
+                  onChanged: (_) {
+                    if (_passwordError != null) {
+                      setState(() => _passwordError = null);
+                    }
+                  },
+                ),
+                Gap(20),
                 ElevatedButton(
                   onPressed: () {
+                    final name = _nameController.text.trim();
                     final email = _emailController.text.trim();
                     final password = _passwordController.text.trim();
-
-                    // reset error sebelum request
+                    final passwordConfirmation = _passwordConfirmedController
+                        .text
+                        .trim();
                     setState(() {
+                      _nameError = null;
                       _emailError = null;
                       _passwordError = null;
                     });
+
                     context.read<AuthBloc>().add(
-                      LoginEvent(
-                        LoginRequest(email: email, password: password),
+                      RegisterEvent(
+                        RegisterRequest(
+                          name: name,
+                          email: email,
+                          password: password,
+                          passConfirmation: passwordConfirmation,
+                        ),
                       ),
                     );
                   },
-                  child: const Text("Login"),
-                ),
-
-                Row(
-                  children: [
-                    Text("Belum Punya Akun?"),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterPage(),
-                          ),
-                        );
-                      },
-                      child: Text("Sign Up"),
-                    ),
-                  ],
+                  child: Text("Register"),
                 ),
               ],
             ),

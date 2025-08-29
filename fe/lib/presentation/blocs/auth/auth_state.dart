@@ -7,10 +7,10 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
-  final User user;
   final String message;
+  final User user;
 
-  AuthSuccess(this.user, this.message);
+  AuthSuccess(this.message, this.user);
 }
 
 // class AuthFailure extends AuthState {

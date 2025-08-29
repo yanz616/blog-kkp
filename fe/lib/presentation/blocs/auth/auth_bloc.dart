@@ -10,11 +10,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.repository) : super(AuthInitial()) {
     on<LoginEvent>((event, emit) async {
       emit(AuthLoading());
-      final response = await repository.login(event.request);
+      final response = await repository.login(event.loginRequest);
 
       if (response is SuccessResponse) {
         final data = response.data;
-        emit(AuthSuccess(data, response.message));
+        emit(AuthSuccess(response.message, data));
       } else if (response is ErrorResponse) {
         emit(AuthFailure(response.message, errors: response.errors));
       }
@@ -23,9 +23,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<RegisterEvent>((event, emit) async {
       emit(AuthLoading());
       final response = await repository.register(event.registerRequest);
-
       if (response is SuccessResponse) {
-        emit(AuthSuccess(response.data, response.message));
+        final data = response.data;
+        emit(AuthSuccess(response.message, data));
       } else if (response is ErrorResponse) {
         emit(AuthFailure(response.message, errors: response.errors));
       }
