@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
             if (state.message.isNotEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.message),
+                  content: Text(state.message, style: TextStyle(fontSize: 16)),
                   backgroundColor: Colors.red,
                 ),
               );
