@@ -1,0 +1,28 @@
+{
+  "name": "Blog KKP Backend server",
+  "type": "module",
+  "scripts": {
+    "test": "bun test",
+    "dev": "bun run --hot src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.55.0",
+    "@types/bcryptjs": "^3.0.0",
+    "bcryptjs": "^3.0.2",
+    "drizzle-orm": "^0.44.5",
+    "hono": "^4.9.5",
+    "postgres": "^3.4.7",
+    "sharp": "^0.34.3",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.21",
+    "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.31.4",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3",
+    "dotenv": "^17.2.1",
+  }
+}
