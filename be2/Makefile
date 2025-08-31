@@ -8,3 +8,5 @@ migrate:
 	@bun run db:migrate
 generate:
 	@bun run db:generate
+
+.PHONY: run up down migrate generate
