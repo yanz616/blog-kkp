@@ -4,19 +4,9 @@ import { sign } from "hono/jwt";
 import { JWTPayload } from "hono/utils/jwt/types";
 import { AuthModel } from "../model/auth.model.js";
 import { ResFormmater } from "../lib/utils/response.js";
+import { LoginRequest, LoginResponse } from "../lib/dto/auth.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
-
-interface LoginResponse {
-    id: number;
-    username: string;
-    email: string;
-    token: string;
-    createdAt: string;
-    updatedAt: string;
-}
-
-
 export class AuthController {
     static async register(c: Context) {
         const { username, email, password } = await c.req.json();
@@ -28,19 +18,20 @@ export class AuthController {
     }
 
     static async login(c: Context) {
-        const { email, password } = await c.req.json();
+        const { email, password } = await c.req.json<LoginRequest>();
         if (!email || !password) return c.json(ResFormmater.failed("Email dan password wajib diisi", 400), 400);
         const user = await AuthModel.login(email);
         if (!user) return c.json(ResFormmater.failed("Tidak dapat menemukan akun dengan email tersebut. Silakan periksa kembali", 401), 401);
         const valid = await bcrypt.compare(password, user.password);
         if (!valid) return c.json(ResFormmater.failed("Kata sandi yang Anda masukkan tidak sesuai. Silakan coba lagi.", 401), 401);
+
         const payload: JWTPayload = {
             userId: user.id,
             username: user.username,
             email: user.email,
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24
         }
-        const token = await sign(
+        const token: string = await sign(
             payload,
             JWT_SECRET!,
             "HS256"

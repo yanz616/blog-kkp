@@ -11,7 +11,6 @@ const app = new Hono()
             allowHeaders: ["Content-Type", "Authorization"],
         })
     )
-
-    .get("/", (c: Context) => c.text("Hallo world"))
+    .get("/", (c: Context) => c.text("Blog KKP Backend, Dibuat dengan Hono + Typscript + DrizleORM"))
     .route("/api", auth)
 export default app
