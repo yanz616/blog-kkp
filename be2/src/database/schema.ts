@@ -1,7 +1,9 @@
-import { boolean, pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, serial, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/pg-core";
 
+// drizzle orm
 
-export const users = pgTable("users", {
+// Table Users
+const users = pgTable("users", {
     id: serial("id").primaryKey(),
     username: varchar("username", { length: 50 }).notNull(),
     avatar: text("avatar"),
@@ -11,3 +13,34 @@ export const users = pgTable("users", {
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });
+
+// Table Posts
+const posts = pgTable("posts", {
+    id: serial("id").primaryKey(),
+    title: varchar("title", { length: 255 }).notNull(),
+    content: text("content").notNull(),
+    image: text("image"),
+    authorId: integer("author_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Table Comments
+const comments = pgTable("comments", {
+    id: serial("id").primaryKey(),
+    content: text("content").notNull(),
+    postId: integer("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Table Votes
+const votes = pgTable("votes", {
+    id: serial("id").primaryKey(),
+    postId: integer("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [uniqueIndex("votes_post_user_idx").on(table.postId, table.userId)]);
+
+export { users, posts, comments, votes }
