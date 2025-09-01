@@ -1,6 +1,7 @@
 import { Context, Hono } from 'hono'
 import { cors } from 'hono/cors'
 import auth from './routes/auth.route.js'
+import posts from './routes/posts.route.js';
 
 const app = new Hono()
     .use(
@@ -13,4 +14,10 @@ const app = new Hono()
     )
     .get("/", (c: Context) => c.text("Blog KKP Backend, Dibuat dengan Hono + Typscript + DrizleORM"))
     .route("/api", auth)
-export default app
+    .route("/api", posts)
+
+export default {
+    port: 3000,
+    hostname: "0.0.0.0",
+    fetch: app.fetch,
+};

@@ -4,16 +4,24 @@ import { sign } from "hono/jwt";
 import { JWTPayload } from "hono/utils/jwt/types";
 import { AuthModel } from "../model/auth.model.js";
 import { ResFormmater } from "../lib/utils/response.js";
-import { LoginRequest, LoginResponse } from "../lib/dto/auth.js";
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "../lib/dto/auth.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 export class AuthController {
     static async register(c: Context) {
-        const { username, email, password } = await c.req.json();
+        const { username, email, password } = await c.req.json<RegisterRequest>();
         if (!username || !email || !password) return c.json(ResFormmater.failed("Username, Email dan password wajib diisi", 400), 400);
         const hashPw = await bcrypt.hash(password, 10)
         const user = await AuthModel.register(username, email, hashPw);
-        return c.json(ResFormmater.success(user, "User registered", 201), 201);
+        const response: RegisterResponse = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar ?? "",
+            createdAt: String(user.createdAt)
+
+        }
+        return c.json(ResFormmater.success(response, "User registered", 201), 201);
 
     }
 
@@ -40,6 +48,7 @@ export class AuthController {
         const response: LoginResponse = {
             id: user.id,
             username: user.username,
+            avatar: user.avatar ?? "",
             email: user.email,
             token: token,
             createdAt: String(user.createdAt),
