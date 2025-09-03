@@ -21,7 +21,6 @@ class AuthSuccess extends AuthState {
 // }
 class AuthFailure extends AuthState {
   final String message;
-  final Map<String, List<String>> errors;
 
-  AuthFailure(this.message, {this.errors = const {}});
+  AuthFailure(this.message);
 }
