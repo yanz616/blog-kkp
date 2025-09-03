@@ -1,4 +1,7 @@
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class DesktopProfilePage extends StatelessWidget {
   const DesktopProfilePage({super.key});
@@ -10,11 +13,11 @@ class DesktopProfilePage extends StatelessWidget {
         width: 500,
         padding: const EdgeInsets.all(24.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -25,24 +28,24 @@ class DesktopProfilePage extends StatelessWidget {
           children: <Widget>[
             const CircleAvatar(
               radius: 70,
-              backgroundColor: Color(0xFF0D47A1),
+              backgroundColor: AppColors.oldBlue,
               child: Icon(Icons.person, size: 80, color: Colors.white),
             ),
-            const SizedBox(height: 24.0),
-            const Text(
-              'Nama Lengkap Peserta',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF212121),
+            const Gap(24.0),
+            PoppinText(
+              text: 'Nama Lengkap Peserta',
+              styles: StyleText(
+                size: 24,
+                weight: FontWeight.bold,
+                color: AppColors.darkGray,
               ),
             ),
-            const SizedBox(height: 8.0),
-            const Text(
-              'email.peserta@example.com',
-              style: TextStyle(fontSize: 16, color: Color(0xFF757575)),
+            const Gap(8.0),
+            PoppinText(
+              text: 'email.peserta@example.com',
+              styles: StyleText(size: 16, color: AppColors.mediumGray),
             ),
-            const SizedBox(height: 40.0),
+            const Gap(40),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -50,15 +53,15 @@ class DesktopProfilePage extends StatelessWidget {
                   // Logika navigasi ke halaman edit profil
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2196F3),
+                  backgroundColor: AppColors.lightBlue,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
-                child: const Text(
-                  'Edit Profil',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                child: PoppinText(
+                  text: 'Edit Profil',
+                  styles: StyleText(size: 18, color: AppColors.white),
                 ),
               ),
             ),

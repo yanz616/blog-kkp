@@ -1,6 +1,9 @@
-import 'package:fe/presentation/views/desktop/home/desktop_home_page.dart';
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/presentation/views/desktop/home/home_page.dart';
 import 'package:fe/presentation/views/desktop/home/my_activity_page.dart';
 import 'package:fe/presentation/views/desktop/home/profile_page.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 
 class DesktopMainScaffold extends StatefulWidget {
@@ -12,11 +15,40 @@ class DesktopMainScaffold extends StatefulWidget {
 
 class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
   int _selectedIndex = 0;
-  final List<Widget> _pages = [
-    const DesktopHomePage(),
-    const DesktopMyActivitiesPage(),
-    const DesktopProfilePage(),
+
+  final List<Widget> _pages = const [
+    DesktopHomePage(),
+    DesktopMyActivitiesPage(),
+    DesktopProfilePage(),
   ];
+
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required String label,
+  }) {
+    final bool isSelected = _selectedIndex == index;
+
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isSelected ? AppColors.lightBlue : AppColors.white,
+      ),
+      title: PoppinText(
+        text: label,
+        styles: StyleText(
+          color: isSelected ? AppColors.lightBlue : AppColors.white,
+        ),
+      ),
+      selected: isSelected,
+      selectedTileColor: AppColors.white,
+      onTap: () {
+        setState(() {
+          _selectedIndex = index;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,68 +58,27 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
           // Sidebar Navigasi
           Container(
             width: 250,
-            color: const Color(0xFF0D47A1),
+            color: AppColors.oldBlue,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24.0),
-                  child: Text(
-                    'IKP Magang Blog',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  child: PoppinText(
+                    text: 'IKP Magang Blog',
+                    styles: StyleText(
+                      color: AppColors.white,
+                      size: 24,
+                      weight: AppWeights.bold,
                     ),
                   ),
                 ),
-                // ListTile untuk Beranda
-                ListTile(
-                  leading: const Icon(Icons.home, color: Colors.white),
-                  title: const Text(
-                    'Beranda',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  selected: _selectedIndex == 0,
-                  selectedTileColor: const Color(0xFF2196F3),
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = 0;
-                    });
-                  },
+                _buildNavItem(index: 0, icon: Icons.home, label: 'Beranda'),
+                _buildNavItem(
+                  index: 1,
+                  icon: Icons.my_library_books,
+                  label: 'Kegiatanku',
                 ),
-                // ListTile untuk Kegiatanku
-                ListTile(
-                  leading: const Icon(
-                    Icons.my_library_books,
-                    color: Colors.white,
-                  ),
-                  title: const Text(
-                    'Kegiatanku',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  selected: _selectedIndex == 1,
-                  selectedTileColor: const Color(0xFF2196F3),
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = 1;
-                    });
-                  },
-                ),
-                // ListTile untuk Profil
-                ListTile(
-                  leading: const Icon(Icons.person, color: Colors.white),
-                  title: const Text(
-                    'Profil',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  selected: _selectedIndex == 2,
-                  selectedTileColor: const Color(0xFF2196F3),
-                  onTap: () {
-                    setState(() {
-                      _selectedIndex = 2;
-                    });
-                  },
-                ),
+                _buildNavItem(index: 2, icon: Icons.person, label: 'Profil'),
                 const Spacer(),
                 const ListTile(
                   leading: Icon(Icons.logout, color: Colors.white),

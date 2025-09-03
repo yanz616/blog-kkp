@@ -10,15 +10,21 @@ class StyleText {
   StyleText({
     this.size = 14,
     this.weight = AppWeights.regular,
-    required this.color,
+    this.color = Colors.black,
   });
 }
 
 class PoppinText extends StatelessWidget {
-  const PoppinText({super.key, required this.text, required this.styles});
+  const PoppinText({
+    super.key,
+    required this.text,
+    required this.styles,
+    this.textAlign,
+  });
 
   final String text;
   final StyleText styles;
+  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {

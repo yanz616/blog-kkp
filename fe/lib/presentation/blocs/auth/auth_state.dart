@@ -9,6 +9,7 @@ class AuthLoading extends AuthState {}
 class AuthSuccess extends AuthState {
   final String message;
   final User user;
+  final bool success = true;
 
   AuthSuccess(this.message, this.user);
 }
@@ -21,6 +22,7 @@ class AuthSuccess extends AuthState {
 // }
 class AuthFailure extends AuthState {
   final String message;
+  final bool success = false;
 
   AuthFailure(this.message);
 }
