@@ -1,3 +1,4 @@
+import 'package:fe/core/utils/local_storage.dart';
 import 'package:fe/data/models/response/auth_response.dart';
 import 'package:fe/data/repositories/auth_repository.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
@@ -14,9 +15,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (response is SuccessResponse) {
         final data = response.data;
+        await LocalStorage.setString(data.token);
         emit(AuthSuccess(response.message, data));
       } else if (response is ErrorResponse) {
-        emit(AuthFailure(response.message, errors: response.errors));
+        emit(AuthFailure(response.message));
       }
     });
 
@@ -27,7 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final data = response.data;
         emit(AuthSuccess(response.message, data));
       } else if (response is ErrorResponse) {
-        emit(AuthFailure(response.message, errors: response.errors));
+        emit(AuthFailure(response.message));
       }
     });
   }
