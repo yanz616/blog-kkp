@@ -105,7 +105,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextField(
-                    controller: TextEditingController(text: 'Jane Doe'),
+                    // controller: TextEditingController(text: 'Jane Doe'),
                     decoration: InputDecoration(
                       labelText: 'Nama Lengkap',
                       labelStyle: const TextStyle(

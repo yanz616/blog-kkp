@@ -1,4 +1,5 @@
 import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/presentation/views/desktop/home/edit_profile_page.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -50,7 +51,10 @@ class DesktopProfilePage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Logika navigasi ke halaman edit profil
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfilePage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.lightBlue,
