@@ -1,14 +1,18 @@
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/presentation/views/desktop/home/activity_detail_page.dart';
 import 'package:fe/presentation/views/desktop/home/add_edit_activity_page.dart';
 import 'package:fe/presentation/widgets/my_activity_card.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 // Contoh data dummy untuk simulasi
-class Activity {
-  final String title;
-  final String date;
-  Activity(this.title, this.date);
-}
+// class Activity {
+//   final String title;
+//   final String date;
+//   Activity(this.title, this.date);
+// }
 
 class DesktopMyActivitiesPage extends StatefulWidget {
   const DesktopMyActivitiesPage({super.key});
@@ -19,39 +23,38 @@ class DesktopMyActivitiesPage extends StatefulWidget {
 }
 
 class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
-  final List<Activity> _activities = [
-    Activity('Rapat Koordinasi Mingguan', '25 Agustus 2025'),
-    Activity('Presentasi Proyek Akhir', '28 Agustus 2025'),
-    Activity('Pelatihan Desain UI/UX', '01 September 2025'),
-  ];
-
-  void _deleteActivity(int index) {
-    setState(() {
-      _activities.removeAt(index);
-    });
-    // Di sini Anda juga bisa memanggil API untuk menghapus data di server
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Kegiatan berhasil dihapus!')));
-  }
+  // void _deleteActivity(int index) {
+  //   setState(() {
+  //     _activities.removeAt(index);
+  //   });
+  //   // memanggil API untuk menghapus data di server
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: PoppinText(
+  //         text: 'Kegiatan berhasil dihapus!',
+  //         styles: StyleText(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         AppBar(
-          title: const Text(
-            'Kegiatanku',
-            style: TextStyle(
-              color: Color(0xFF212121),
-              fontWeight: FontWeight.bold,
+          title: PoppinText(
+            text: 'Kegiatanku',
+            styles: StyleText(
+              color: AppColors.darkGray,
+              weight: AppWeights.bold,
             ),
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
           actions: [
             IconButton(
-              icon: const Icon(Icons.add_circle, color: Color(0xFF2196F3)),
+              icon: const Icon(Icons.add_circle, color: AppColors.lightBlue),
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
@@ -63,22 +66,22 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
             ),
           ],
         ),
-        const SizedBox(height: 16.0),
+        const Gap(16.0),
         Expanded(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: 0.8,
+                childAspectRatio: 1.0,
                 crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
+                mainAxisSpacing: 18.0,
               ),
-              itemCount: _activities.length,
+              itemCount: 10,
               itemBuilder: (context, index) {
                 return MyActivityCard(
-                  title: _activities[index].title,
-                  date: _activities[index].date,
+                  title: "Rapat Dinas",
+                  date: "26 Agustus 2025",
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -99,24 +102,32 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                       context: context,
                       builder: (BuildContext dialogContext) {
                         return AlertDialog(
-                          title: const Text('Konfirmasi Hapus'),
-                          content: const Text(
-                            'Apakah Anda yakin ingin menghapus kegiatan ini?',
+                          title: PoppinText(
+                            text: 'Konfirmasi Hapus',
+                            styles: StyleText(),
+                          ),
+                          content: PoppinText(
+                            text:
+                                'Apakah Anda yakin ingin menghapus kegiatan ini?',
+                            styles: StyleText(),
                           ),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () =>
                                   Navigator.of(dialogContext).pop(),
-                              child: const Text('Batal'),
+                              child: PoppinText(
+                                text: 'Batal',
+                                styles: StyleText(),
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
-                                _deleteActivity(index);
+                                // _deleteActivity(index);
                                 Navigator.of(dialogContext).pop();
                               },
-                              child: const Text(
-                                'Hapus',
-                                style: TextStyle(color: Colors.red),
+                              child: PoppinText(
+                                text: 'Hapus',
+                                styles: StyleText(color: AppColors.crimson),
                               ),
                             ),
                           ],

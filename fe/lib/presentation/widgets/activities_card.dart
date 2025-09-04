@@ -1,3 +1,5 @@
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -32,30 +34,35 @@ class ActivitiesCard extends StatelessWidget {
               Container(
                 height: 200,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: AppColors.lightGray,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.photo_library,
                     size: 50,
-                    color: Colors.grey,
+                    color: AppColors.mediumGray,
                   ),
                 ),
               ),
               Gap(12),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff212121),
+              PoppinText(
+                text: title,
+                styles: StyleText(
+                  size: 18,
+                  weight: FontWeight.bold,
+                  color: AppColors.darkGray,
                 ),
               ),
               Gap(4),
-              Text(
-                "Oleh : $author - $date",
-                style: TextStyle(fontSize: 14, color: Color(0xff757575)),
+              PoppinText(
+                text: "Oleh : $author",
+                styles: StyleText(size: 14, color: AppColors.mediumGray),
+              ),
+              Gap(4),
+              PoppinText(
+                text: date,
+                styles: StyleText(color: AppColors.mediumGray),
               ),
             ],
           ),

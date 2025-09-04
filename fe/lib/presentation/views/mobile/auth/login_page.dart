@@ -38,11 +38,7 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
     super.dispose();
   }
 
-  void _showSnackBar(
-    BuildContext context,
-    String message, {
-    bool error = true,
-  }) {
+  void _showSnackBar(BuildContext context, String message, bool success) {
     final overlay = Overlay.of(context);
     final animationController = AnimationController(
       vsync: Navigator.of(context),
@@ -69,7 +65,7 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 66, vertical: 12),
                   decoration: BoxDecoration(
-                    color: error ? AppColors.linen : AppColors.mintCream,
+                    color: success ? AppColors.mintCream : AppColors.linen,
                     borderRadius: BorderRadius.circular(30),
                     border: Border.all(
                       color: AppColors.lightSlateGray,
@@ -81,7 +77,7 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
                     styles: StyleText(
                       size: 12,
                       weight: AppWeights.bold,
-                      color: error ? AppColors.crimson : AppColors.ufoGreen,
+                      color: success ? AppColors.ufoGreen : AppColors.crimson,
                     ),
                   ),
                 ),
@@ -218,11 +214,7 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
                     children: [
                       PoppinText(
                         text: 'Belum Punya Akun?',
-                        styles: StyleText(
-                          size: 14,
-                          weight: AppWeights.regular,
-                          color: AppColors.oldBlue,
-                        ),
+                        styles: StyleText(color: AppColors.oldBlue),
                       ),
                       TextButton(
                         onPressed: () {
@@ -259,10 +251,9 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
                           );
                         },
                         child: PoppinText(
-                          text: 'Sign Up',
+                          text: 'Daftar di sini',
                           styles: StyleText(
-                            size: 14,
-                            weight: AppWeights.regular,
+                            weight: AppWeights.semiBold,
                             color: AppColors.oldBlue,
                           ),
                         ),
@@ -276,35 +267,9 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
         },
         listener: (context, state) {
           if (state is AuthSuccess) {
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: PoppinText(
-            //       text: state.message,
-            //       styles: StyleText(
-            //         size: 18,
-            //         weight: AppWeights.semiBold,
-            //         color: AppColors.ufoGreen,
-            //       ),
-            //     ),
-            //     backgroundColor: AppColors.mintCream,
-            //   ),
-            // );
-            _showSnackBar(context, state.message);
+            _showSnackBar(context, state.message, state.success);
           } else if (state is AuthFailure) {
-            _showSnackBar(context, state.message);
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: PoppinText(
-            //       text: state.message,
-            //       styles: StyleText(
-            //         size: 18,
-            //         weight: AppWeights.semiBold,
-            //         color: AppColors.crimson,
-            //       ),
-            //     ),
-            //     backgroundColor: AppColors.mutedRed,
-            //   ),
-            // );
+            _showSnackBar(context, state.message, state.success);
           }
         },
       ),

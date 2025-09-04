@@ -1,24 +1,51 @@
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
-class DesktopAddEditActivityPage extends StatelessWidget {
+class DesktopAddEditActivityPage extends StatefulWidget {
   final bool isEditing;
 
   const DesktopAddEditActivityPage({super.key, this.isEditing = false});
 
   @override
+  State<DesktopAddEditActivityPage> createState() =>
+      _DesktopAddEditActivityPageState();
+}
+
+class _DesktopAddEditActivityPageState
+    extends State<DesktopAddEditActivityPage> {
+  late TextEditingController _titleController;
+  late TextEditingController _descController;
+
+  @override
+  void initState() {
+    _titleController = TextEditingController();
+    _descController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), // Abu-abu Muda
       body: Center(
         child: Container(
           width: 700,
           padding: const EdgeInsets.all(32.0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -30,22 +57,23 @@ class DesktopAddEditActivityPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 // Judul Halaman
-                Text(
-                  isEditing ? 'Edit Kegiatan' : 'Tambah Kegiatan',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF212121),
+                PoppinText(
+                  text: widget.isEditing ? 'Edit Kegiatan' : 'Tambah Kegiatan',
+                  styles: StyleText(
+                    size: 28,
+                    weight: AppWeights.bold,
+                    color: AppColors.darkGray,
                   ),
                 ),
-                const SizedBox(height: 8.0),
-                const Text(
-                  'Isi detail kegiatan magang Anda',
-                  style: TextStyle(fontSize: 16, color: Color(0xFF757575)),
+                const Gap(8.0),
+                PoppinText(
+                  text: 'Isi detail kegiatan magang Anda',
+                  styles: StyleText(size: 16, color: AppColors.mediumGray),
                 ),
-                const SizedBox(height: 48.0),
+                const Gap(48.0),
                 // Formulir Input
                 TextFormField(
+                  controller: _titleController,
                   decoration: InputDecoration(
                     labelText: 'Judul Kegiatan',
                     border: OutlineInputBorder(
@@ -53,8 +81,9 @@ class DesktopAddEditActivityPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const Gap(16.0),
                 TextFormField(
+                  controller: _descController,
                   maxLines: 5,
                   decoration: InputDecoration(
                     labelText: 'Deskripsi',
@@ -63,32 +92,23 @@ class DesktopAddEditActivityPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Tanggal',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24.0),
+                const Gap(24.0),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () {},
                     icon: const Icon(
                       Icons.photo_library,
-                      color: Color(0xFF0D47A1),
+                      color: AppColors.oldBlue,
                     ),
-                    label: const Text(
-                      'Unggah Foto',
-                      style: TextStyle(color: Color(0xFF0D47A1)),
+                    label: PoppinText(
+                      text: 'Unggah Foto',
+                      styles: StyleText(color: AppColors.oldBlue),
                     ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       side: const BorderSide(
-                        color: Color(0xFF0D47A1),
+                        color: AppColors.oldBlue,
                         width: 2,
                       ),
                       shape: RoundedRectangleBorder(
@@ -97,21 +117,21 @@ class DesktopAddEditActivityPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24.0),
+                const Gap(24.0),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2196F3),
+                      backgroundColor: AppColors.lightBlue,
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    child: Text(
-                      isEditing ? 'Simpan Perubahan' : 'Simpan',
-                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                    child: PoppinText(
+                      text: widget.isEditing ? 'Simpan Perubahan' : 'Simpan',
+                      styles: StyleText(size: 18, color: AppColors.white),
                     ),
                   ),
                 ),

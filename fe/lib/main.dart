@@ -2,8 +2,8 @@ import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/data/repositories/auth_repository.dart';
 import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/layouts/rensponsive_layout.dart';
-import 'package:fe/presentation/views/desktop/auth/desktop_login_page.dart';
-import 'package:fe/presentation/views/mobile/auth/login_page.dart';
+import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
+import 'package:fe/presentation/views/mobile/navigation/mobile_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: AppColors.youngGray),
         home: ResponsiveLayout(
-          mobileLayout: MobileLoginPage(),
-          desktopLayout: DesktopLoginPage(),
+          mobileLayout: MobileMainScaffold(),
+          desktopLayout: DesktopMainScaffold(),
         ),
       ),
     );

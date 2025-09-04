@@ -19,7 +19,6 @@ class AuthRepository {
       final jsonData = jsonDecode(response.body);
 
       if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
-        print(jsonData);
         return SuccessResponse.fromJson(jsonData);
       } else {
         return ErrorResponse.fromJson(jsonData);
@@ -44,8 +43,7 @@ class AuthRepository {
 
       final jsonData = jsonDecode(response.body);
 
-      if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
-        print(jsonData);
+      if (jsonData['statusCode'] == 201 && jsonData['success'] == true) {
         return SuccessResponse.fromJson(jsonData);
       } else {
         return ErrorResponse.fromJson(jsonData);

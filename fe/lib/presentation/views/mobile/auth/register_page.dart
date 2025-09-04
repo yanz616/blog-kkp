@@ -23,10 +23,6 @@ class _MobileRegisterPageState extends State<MobileRegisterPage> {
   late TextEditingController _passwordController;
   late TextEditingController _passwordConfirmedController;
 
-  // String? _usernameError;
-  // String? _emailError;
-  // String? _passwordError;
-
   @override
   void initState() {
     _usernameController = TextEditingController();
@@ -45,20 +41,61 @@ class _MobileRegisterPageState extends State<MobileRegisterPage> {
     super.dispose();
   }
 
-  // String isPasswordMatch(
-  //   String password,
-  //   String passwordConfirmed,
-  //   String passwordMessage,
-  // ) {
-  //   password = _passwordController.text.trim();
-  //   passwordConfirmed = _passwordConfirmedController.text.trim();
+  void _showSnackBar(BuildContext context, String message, bool success) {
+    final overlay = Overlay.of(context);
+    final animationController = AnimationController(
+      vsync: Navigator.of(context),
+      duration: Duration(milliseconds: 300),
+    );
+    final animation =
+        Tween<Offset>(
+          begin: Offset(0, -1), // mulai di luar layar atas
+          end: Offset(0, 0), // turun ke posisi
+        ).animate(
+          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+        );
 
-  //   if (password != passwordConfirmed) {
-  //     return passwordMessage = "Password Does not match";
-  //   } else {
-  //     return "";
-  //   }
-  // }
+    final entry = OverlayEntry(
+      builder: (context) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: SlideTransition(
+              position: animation,
+              child: Material(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 66, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: success ? AppColors.mintCream : AppColors.linen,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: AppColors.lightSlateGray,
+                      width: 1,
+                    ),
+                  ),
+                  child: PoppinText(
+                    text: message,
+                    styles: StyleText(
+                      size: 12,
+                      weight: AppWeights.bold,
+                      color: success ? AppColors.ufoGreen : AppColors.crimson,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    overlay.insert(entry);
+    animationController.forward();
+    Future.delayed(Duration(seconds: 2), () {
+      animationController.reverse().then((_) => entry.remove());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,12 +223,6 @@ class _MobileRegisterPageState extends State<MobileRegisterPage> {
                             .text
                             .trim();
 
-                        // setState(() {
-                        //   _usernameError = null;
-                        //   _emailError = null;
-                        //   _passwordError = null;
-                        // });
-
                         context.read<AuthBloc>().add(
                           RegisterEvent(
                             RegisterRequest(
@@ -218,39 +249,56 @@ class _MobileRegisterPageState extends State<MobileRegisterPage> {
                   ),
                   const Gap(16.0),
                   // Tautan ke Halaman Login (dengan animasi)
-                  TextButton(
-                    onPressed: () {
-                      // Navigasi kembali ke halaman login dengan transisi kustom
-                      Navigator.of(context).pushReplacement(
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) =>
-                              const MyApp(), // Pastikan nama kelas login page benar
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                                const begin = Offset(
-                                  1.0,
-                                  0.0,
-                                ); // Geser dari kanan
-                                const end = Offset.zero;
-                                const curve = Curves.ease;
+                  Row(
+                    children: [
+                      PoppinText(
+                        text: "Sudah Punya Akun?",
+                        styles: StyleText(color: AppColors.oldBlue),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Navigasi kembali ke halaman login dengan transisi kustom
+                          Navigator.of(context).pushReplacement(
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const MyApp(), // Pastikan nama kelas login page benar
+                              transitionsBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    const begin = Offset(
+                                      1.0,
+                                      0.0,
+                                    ); // Geser dari kanan
+                                    const end = Offset.zero;
+                                    const curve = Curves.ease;
 
-                                var tween = Tween(
-                                  begin: begin,
-                                  end: end,
-                                ).chain(CurveTween(curve: curve));
+                                    var tween = Tween(
+                                      begin: begin,
+                                      end: end,
+                                    ).chain(CurveTween(curve: curve));
 
-                                return SlideTransition(
-                                  position: animation.drive(tween),
-                                  child: child,
-                                );
-                              },
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                            ),
+                          );
+                        },
+                        child: PoppinText(
+                          text: 'Masuk di sini',
+                          styles: StyleText(
+                            weight: AppWeights.semiBold,
+                            color: AppColors.oldBlue,
+                          ),
                         ),
-                      );
-                    },
-                    child: PoppinText(
-                      text: 'Sudah punya akun? Masuk di sini',
-                      styles: StyleText(color: Color(0xFF0D47A1)),
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -260,30 +308,13 @@ class _MobileRegisterPageState extends State<MobileRegisterPage> {
         listener: (context, state) {
           if (state is AuthSuccess) {
             // LocalStorage.setString(state.user.)
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: PoppinText(
-                  text: state.message,
-                  styles: StyleText(
-                    size: 18,
-                    weight: AppWeights.semiBold,
-                    color: AppColors.ufoGreen,
-                  ),
-                ),
-                backgroundColor: AppColors.mintCream,
-              ),
-            );
+            _showSnackBar(context, state.message, state.success);
           } else if (state is AuthFailure) {
             if (_passwordController.text.trim() !=
                 _passwordConfirmedController.text.trim()) {
-              // return message("Password Does Not Match");
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Password Does Not Match")),
-              );
+              _showSnackBar(context, "Password Does not Match", state.success);
             } else {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+              _showSnackBar(context, state.message, state.success);
             }
           }
         },
