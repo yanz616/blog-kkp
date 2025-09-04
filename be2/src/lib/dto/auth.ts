@@ -2,6 +2,7 @@ interface UserPayloadData {
     userId: number;
     username: string;
     email: string;
+    isAdmin: boolean;
 }
 
 interface LoginResponse {
@@ -11,7 +12,6 @@ interface LoginResponse {
     token: string;
     avatar: string;
     createdAt: string;
-    updatedAt: string;
 }
 
 interface LoginRequest {

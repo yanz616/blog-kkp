@@ -7,6 +7,7 @@ const app = new Hono()
     .get("/posts/:id", PostsController.getById)
     .use("*", AuthMiddleware)
     .post("/posts", PostsController.create)
+    .put("/posts/:id", PostsController.update)
     .delete("/posts/:id", PostsController.delete)
 
 const posts = new Hono().route("/v1", app)

@@ -32,7 +32,7 @@ const comments = pgTable("comments", {
     id: serial("id").primaryKey(),
     content: text("content").notNull(),
     postId: integer("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    authorId: integer("author_id").notNull().references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -41,8 +41,8 @@ const comments = pgTable("comments", {
 const votes = pgTable("votes", {
     id: serial("id").primaryKey(),
     postId: integer("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
-    userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    authorId: integer("author_id").notNull().references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow(),
-}, (table) => [uniqueIndex("votes_post_user_idx").on(table.postId, table.userId)]);
+}, (table) => [uniqueIndex("votes_post_user_idx").on(table.postId, table.authorId)]);
 
 export { users, posts, comments, votes }

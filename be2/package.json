@@ -4,8 +4,10 @@
   "scripts": {
     "test": "bun test",
     "dev": "bun run --hot src/index.ts",
+    "devh": "bun run --hot --host src/index.ts",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "bun run ./src/database/seed.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
