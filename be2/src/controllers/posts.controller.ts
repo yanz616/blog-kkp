@@ -37,9 +37,6 @@ export class PostsController {
         }
     }
 
-
-
-
     static async update(c: Context) {
         try {
             const userAuth = c.get("user") as UserPayloadData
@@ -107,11 +104,10 @@ export class PostsController {
             const imageId = record.imageId
             if (imageId) await SupabaseDelete(imageId)
             const response = await PostsModel.delete(id)
-            if (!response) return c.json(ResFormmater.failed("Failed to delete posts ", 404), 404);
-            return c.json(ResFormmater.success(response, "Post deleted successfully"), 200);
+            if (!response) return c.json(ResFormmater.failed("Gagal menghapus postingan", 404), 404);
+            return c.json(ResFormmater.success(response, "Berhasil menghapus postingan"), 200);
         } catch (err) {
             return c.json(ResFormmater.failed("Server Error" + err, 500), 500);
         }
-
     }
 }

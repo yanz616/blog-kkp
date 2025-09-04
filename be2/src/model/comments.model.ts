@@ -27,13 +27,12 @@ export class CommentModel {
         return await db.select().from(comments).where(eq(comments.postId, postId));
     }
 
-
-static async delete(id: number, authorId: number) {
-    const result = await db
-        .delete(comments)
-        .where(and(eq(comments.id, id), eq(comments.authorId, authorId))) 
-        .returning();
-    return result[0] || null;
-}
+    static async delete(id: number, authorId: number) {
+        const result = await db
+            .delete(comments)
+            .where(and(eq(comments.id, id), eq(comments.authorId, authorId)))
+            .returning();
+        return result[0] || null;
+    }
 
 }
