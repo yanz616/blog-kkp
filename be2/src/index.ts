@@ -4,6 +4,7 @@ import auth from './routes/auth.route.js'
 import posts from './routes/posts.route.js';
 import comments from './routes/comments.route.js';
 import users from './routes/users.route.js';
+import swagger from './routes/swagger.route.js';
 
 const app = new Hono()
     .use(
@@ -14,6 +15,7 @@ const app = new Hono()
             allowHeaders: ["Content-Type", "Authorization"],
         })
     )
+    .route("/swagger", swagger)
     .get("/", (c: Context) => c.text("Blog KKP Backend, Dibuat dengan Hono + Typscript + DrizleORM"))
     .route("/api", auth)
     .route("/api", posts)
