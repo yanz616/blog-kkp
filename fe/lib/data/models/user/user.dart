@@ -1,53 +1,44 @@
-import 'package:fe/data/helpers/date_time_helper.dart';
+// import 'package:fe/data/helpers/date_time_helper.dart';
 
 class User {
   final int id;
-  final String name;
+  final String username;
   final String email;
   final String? avatar;
   final String? password;
-  final bool isAdmin;
   final String token;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String createdAt;
 
   User({
     required this.id,
-    required this.name,
+    required this.username,
     required this.email,
     this.avatar,
     this.password,
-    required this.isAdmin,
     required this.token,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      name: json['name'],
+      username: json['username'],
       email: json['email'],
       avatar: json['avatar'],
-      password: json['password'],
-      isAdmin: json['is_admin'] == false,
       token: json['token'],
-      createdAt: DateTimeHelper.parseDate(json['created_at']),
-      updatedAt: DateTimeHelper.parseDate(json['updated_at']),
+      createdAt: json['createdAt'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'username': username,
       'email': email,
       'avatar': avatar,
       'password': password,
-      'is_admin': isAdmin,
       'token': token,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
+      'created_at': createdAt,
     };
   }
 }

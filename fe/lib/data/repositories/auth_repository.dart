@@ -18,6 +18,7 @@ class AuthRepository {
       );
 
       final jsonData = jsonDecode(response.body);
+      print(jsonData);
 
       if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
         return SuccessResponse<User>.fromJson(
@@ -28,6 +29,7 @@ class AuthRepository {
         return ErrorResponse.fromJson(jsonData);
       }
     } catch (e) {
+      print(e);
       return ErrorResponse(
         success: false,
         statusCode: 500,

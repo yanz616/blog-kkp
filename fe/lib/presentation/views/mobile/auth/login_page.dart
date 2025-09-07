@@ -5,6 +5,7 @@ import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
 import 'package:fe/presentation/views/mobile/auth/register_page.dart';
+import 'package:fe/presentation/views/mobile/navigation/mobile_navigation.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,48 +45,52 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
       vsync: Navigator.of(context),
       duration: Duration(milliseconds: 300),
     );
-    final animation =
-        Tween<Offset>(
-          begin: Offset(0, -1), // mulai di luar layar atas
-          end: Offset(0, 0), // turun ke posisi
-        ).animate(
-          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-        );
+    final animation = Tween<Offset>(
+      begin: Offset(0, -1), // mulai di luar layar atas
+      end: Offset(0, 0), // turun ke posisi
+    ).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+    );
 
     final entry = OverlayEntry(
-      builder: (context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: SlideTransition(
-              position: animation,
-              child: Material(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 66, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: success ? AppColors.mintCream : AppColors.linen,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: AppColors.lightSlateGray,
-                      width: 1,
-                    ),
-                  ),
-                  child: PoppinText(
-                    text: message,
-                    styles: StyleText(
-                      size: 12,
-                      weight: AppWeights.bold,
-                      color: success ? AppColors.ufoGreen : AppColors.crimson,
+      builder:
+          (context) => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: SlideTransition(
+                  position: animation,
+                  child: Material(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 66,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: success ? AppColors.mintCream : AppColors.linen,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: AppColors.lightSlateGray,
+                          width: 1,
+                        ),
+                      ),
+                      child: PoppinText(
+                        text: message,
+                        styles: StyleText(
+                          size: 12,
+                          weight: AppWeights.bold,
+                          color:
+                              success ? AppColors.ufoGreen : AppColors.crimson,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
     );
     overlay.insert(entry);
     animationController.forward();
@@ -223,30 +228,29 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
                                       const MobileRegisterPage(), // Pastikan nama kelas login page benar
-                              transitionsBuilder:
-                                  (
-                                    context,
-                                    animation,
-                                    secondaryAnimation,
-                                    child,
-                                  ) {
-                                    const begin = Offset(
-                                      1.0,
-                                      0.0,
-                                    ); // Geser dari kanan
-                                    const end = Offset.zero;
-                                    const curve = Curves.ease;
+                              transitionsBuilder: (
+                                context,
+                                animation,
+                                secondaryAnimation,
+                                child,
+                              ) {
+                                const begin = Offset(
+                                  1.0,
+                                  0.0,
+                                ); // Geser dari kanan
+                                const end = Offset.zero;
+                                const curve = Curves.ease;
 
-                                    var tween = Tween(
-                                      begin: begin,
-                                      end: end,
-                                    ).chain(CurveTween(curve: curve));
+                                var tween = Tween(
+                                  begin: begin,
+                                  end: end,
+                                ).chain(CurveTween(curve: curve));
 
-                                    return SlideTransition(
-                                      position: animation.drive(tween),
-                                      child: child,
-                                    );
-                                  },
+                                return SlideTransition(
+                                  position: animation.drive(tween),
+                                  child: child,
+                                );
+                              },
                             ),
                           );
                         },
@@ -268,6 +272,9 @@ class _MobileLoginPageState extends State<MobileLoginPage> {
         listener: (context, state) {
           if (state is AuthSuccess) {
             _showSnackBar(context, state.message, state.success);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => MobileMainScaffold()),
+            );
           } else if (state is AuthFailure) {
             _showSnackBar(context, state.message, state.success);
           }
