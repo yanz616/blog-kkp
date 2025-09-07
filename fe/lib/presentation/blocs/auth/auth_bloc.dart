@@ -1,5 +1,5 @@
 import 'package:fe/core/utils/local_storage.dart';
-import 'package:fe/data/models/response/auth_response.dart';
+import 'package:fe/data/models/response/response_model.dart';
 import 'package:fe/data/repositories/auth_repository.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';

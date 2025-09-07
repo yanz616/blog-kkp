@@ -4,25 +4,24 @@ import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class DesktopAddEditActivityPage extends StatefulWidget {
-  final bool isEditing;
-
-  const DesktopAddEditActivityPage({super.key, this.isEditing = false});
+class DesktopEditActivityPage extends StatefulWidget {
+  const DesktopEditActivityPage({super.key});
 
   @override
-  State<DesktopAddEditActivityPage> createState() =>
-      _DesktopAddEditActivityPageState();
+  State<DesktopEditActivityPage> createState() =>
+      _DesktopEditActivityPageState();
 }
 
-class _DesktopAddEditActivityPageState
-    extends State<DesktopAddEditActivityPage> {
+class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
   late TextEditingController _titleController;
   late TextEditingController _descController;
 
   @override
   void initState() {
-    _titleController = TextEditingController();
-    _descController = TextEditingController();
+    _titleController = TextEditingController(
+      text: "Judul Awal",
+    ); // bisa prefill dari data
+    _descController = TextEditingController(text: "Deskripsi awal kegiatan");
     super.initState();
   }
 
@@ -58,7 +57,7 @@ class _DesktopAddEditActivityPageState
               children: <Widget>[
                 // Judul Halaman
                 PoppinText(
-                  text: widget.isEditing ? 'Edit Kegiatan' : 'Tambah Kegiatan',
+                  text: 'Edit Kegiatan',
                   styles: StyleText(
                     size: 28,
                     weight: AppWeights.bold,
@@ -67,7 +66,7 @@ class _DesktopAddEditActivityPageState
                 ),
                 const Gap(8.0),
                 PoppinText(
-                  text: 'Isi detail kegiatan magang Anda',
+                  text: 'Ubah detail kegiatan magang Anda',
                   styles: StyleText(size: 16, color: AppColors.mediumGray),
                 ),
                 const Gap(48.0),
@@ -102,7 +101,7 @@ class _DesktopAddEditActivityPageState
                       color: AppColors.oldBlue,
                     ),
                     label: PoppinText(
-                      text: 'Unggah Foto',
+                      text: 'Ganti Foto',
                       styles: StyleText(color: AppColors.oldBlue),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -129,9 +128,9 @@ class _DesktopAddEditActivityPageState
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    child: PoppinText(
-                      text: widget.isEditing ? 'Simpan Perubahan' : 'Simpan',
-                      styles: StyleText(size: 18, color: AppColors.white),
+                    child: const Text(
+                      'Simpan Perubahan',
+                      style: TextStyle(color: AppColors.white, fontSize: 18),
                     ),
                   ),
                 ),

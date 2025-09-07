@@ -1,0 +1,203 @@
+import 'dart:io';
+
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/data/models/request/post_request.dart';
+import 'package:fe/presentation/blocs/posts/post_bloc.dart';
+import 'package:fe/presentation/blocs/posts/post_event.dart';
+import 'package:fe/presentation/blocs/posts/post_state.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
+
+class DesktopAddActivityPage extends StatefulWidget {
+  const DesktopAddActivityPage({super.key});
+
+  @override
+  State<DesktopAddActivityPage> createState() => _DesktopAddActivityPageState();
+}
+
+class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
+  late TextEditingController _titleController;
+  late TextEditingController _contentController;
+  File? _selectedImage;
+
+  @override
+  void initState() {
+    _titleController = TextEditingController();
+    _contentController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _submit() {
+    final request = PostRequest(
+      title: _titleController.text.trim(),
+      content: _contentController.text.trim(),
+      image: _selectedImage!,
+    );
+    context.read<PostBloc>().add(CreatePost(request));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: 700,
+          padding: const EdgeInsets.all(32.0),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: BlocConsumer(
+            listener: (context, state) {
+              if (state is PostsSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: PoppinText(
+                      text: state.message,
+                      styles: StyleText(),
+                    ),
+                  ),
+                );
+              } else if (state is PostsFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: PoppinText(
+                      text: state.message,
+                      styles: StyleText(),
+                    ),
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    // Judul Halaman
+                    PoppinText(
+                      text: 'Tambah Kegiatan',
+                      styles: StyleText(
+                        size: 28,
+                        weight: AppWeights.bold,
+                        color: AppColors.darkGray,
+                      ),
+                    ),
+                    const Gap(8.0),
+                    PoppinText(
+                      text: 'Isi detail kegiatan magang Anda',
+                      styles: StyleText(size: 16, color: AppColors.mediumGray),
+                    ),
+                    const Gap(48.0),
+                    // Formulir Input
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        labelText: 'Judul Kegiatan',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    const Gap(16.0),
+                    TextFormField(
+                      controller: _contentController,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        labelText: 'Deskripsi',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    const Gap(24.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          _pickImage();
+                        },
+                        icon: const Icon(
+                          Icons.photo_library,
+                          color: AppColors.oldBlue,
+                        ),
+                        label: PoppinText(
+                          text: 'Unggah Foto',
+                          styles: StyleText(color: AppColors.oldBlue),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          side: const BorderSide(
+                            color: AppColors.oldBlue,
+                            width: 2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(24.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          state is PostsLoading ? null : _submit();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.lightBlue,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: const Text(
+                          'Simpan',
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}

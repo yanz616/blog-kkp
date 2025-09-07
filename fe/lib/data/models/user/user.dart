@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+import 'package:fe/data/helpers/date_time_helper.dart';
 
 class User {
   final int id;
@@ -32,8 +32,8 @@ class User {
       password: json['password'],
       isAdmin: json['is_admin'] == false,
       token: json['token'],
-      createdAt: _parseDate(json['created_at']),
-      updatedAt: _parseDate(json['updated_at']),
+      createdAt: DateTimeHelper.parseDate(json['created_at']),
+      updatedAt: DateTimeHelper.parseDate(json['updated_at']),
     );
   }
 
@@ -49,24 +49,5 @@ class User {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };
-  }
-
-  /// Helper untuk parsing tanggal dengan fallback
-  static DateTime? _parseDate(dynamic dateStr) {
-    if (dateStr == null) return null;
-
-    try {
-      // coba parse ISO8601 langsung
-      return DateTime.tryParse(dateStr.toString());
-    } catch (_) {
-      try {
-        // fallback ke format Laravel "yyyy-MM-dd HH:mm:ss"
-        return DateFormat(
-          "yyyy-MM-dd HH:mm:ss",
-        ).parse(dateStr.toString(), true).toLocal();
-      } catch (_) {
-        return null; // kalau gagal semua, biarkan null
-      }
-    }
   }
 }
