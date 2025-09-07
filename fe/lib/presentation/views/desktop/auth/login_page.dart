@@ -5,7 +5,7 @@ import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
 import 'package:fe/presentation/views/desktop/auth/register_page.dart';
-import 'package:fe/presentation/views/desktop/home/home_page.dart';
+import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -234,12 +234,6 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                                     ),
                                   ),
                                 );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DesktopHomePage(),
-                                  ),
-                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.lightBlue,
@@ -314,6 +308,9 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
         listener: (context, state) {
           if (state is AuthSuccess) {
             _showSnackBar(context, state.message, state.success);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => DesktopMainScaffold()),
+            );
           } else if (state is AuthFailure) {
             _showSnackBar(context, state.message, state.success);
           }
