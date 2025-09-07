@@ -1,7 +1,5 @@
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
-import 'package:fe/presentation/views/desktop/home/activity_detail_page.dart';
-import 'package:fe/presentation/views/desktop/home/add_activity.dart';
 import 'package:fe/presentation/views/desktop/home/edit_activity.dart';
 import 'package:fe/presentation/widgets/my_activity_card.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
@@ -57,11 +55,11 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
             IconButton(
               icon: const Icon(Icons.add_circle, color: AppColors.lightBlue),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const DesktopAddActivityPage(),
-                  ),
-                );
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => const DesktopAddActivityPage(),
+                //   ),
+                // );
               },
             ),
           ],
@@ -83,11 +81,11 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                   title: "Rapat Dinas",
                   date: "26 Agustus 2025",
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const DesktopActivityDetailPage(),
-                      ),
-                    );
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const DesktopActivityDetailPage(),
+                    //   ),
+                    // );
                   },
                   onEdit: () {
                     Navigator.of(context).push(

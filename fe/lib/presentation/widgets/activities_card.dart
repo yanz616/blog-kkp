@@ -7,7 +7,7 @@ class ActivitiesCard extends StatelessWidget {
   final String title;
   final String author;
   final String date;
-  final String? imageUrl; // ✅ tambah opsional untuk gambar
+  final String? imageUrl;
   final VoidCallback onTap;
 
   const ActivitiesCard({

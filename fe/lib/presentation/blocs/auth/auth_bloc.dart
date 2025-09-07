@@ -16,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (response is SuccessResponse) {
         final User data = response.data;
         await LocalStorage.setString(data.token);
-        emit(AuthSuccess(response.message, data));
+        emit(AuthSuccess("${response.message} sebagai ${data.username}", data));
       } else if (response is ErrorResponse) {
         emit(AuthFailure(response.message));
       }
