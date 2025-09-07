@@ -23,11 +23,11 @@ class ActivitiesCard extends StatelessWidget {
       onTap: onTap,
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(12),
+          borderRadius: BorderRadius.circular(12),
         ),
         elevation: 2,
         child: Padding(
-          padding: EdgeInsetsGeometry.all(16),
+          padding: EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
