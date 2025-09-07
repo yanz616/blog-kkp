@@ -1,22 +1,26 @@
 import 'package:fe/data/models/posts/post_model.dart';
 
-abstract class PostState {}
+abstract class PostState {
+  const PostState();
+}
 
-class PostsInitial extends PostState {}
+class PostsInitial extends PostState {
+  const PostsInitial();
+}
 
-class PostsLoading extends PostState {}
+class PostsLoading extends PostState {
+  const PostsLoading();
+}
 
 class PostsSuccess extends PostState {
   final String message;
-  final PostModel postModel;
-  final bool success = true;
+  final PostModel post;
 
-  PostsSuccess(this.message, this.postModel);
+  const PostsSuccess(this.message, this.post);
 }
 
 class PostsFailure extends PostState {
   final String message;
-  final bool success = false;
 
-  PostsFailure(this.message);
+  const PostsFailure(this.message);
 }

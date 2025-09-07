@@ -51,6 +51,13 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
   }
 
   void _submit() {
+    if (_selectedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Harap pilih gambar terlebih dahulu")),
+      );
+      return;
+    }
+
     final request = PostRequest(
       title: _titleController.text.trim(),
       content: _contentController.text.trim(),
@@ -77,7 +84,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
               ),
             ],
           ),
-          child: BlocConsumer(
+          child: BlocConsumer<PostBloc, PostState>(
             listener: (context, state) {
               if (state is PostsSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -120,6 +127,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                       styles: StyleText(size: 16, color: AppColors.mediumGray),
                     ),
                     const Gap(48.0),
+
                     // Formulir Input
                     TextFormField(
                       controller: _titleController,
@@ -142,12 +150,12 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                       ),
                     ),
                     const Gap(24.0),
+
+                    // Upload Foto
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                          _pickImage();
-                        },
+                        onPressed: _pickImage,
                         icon: const Icon(
                           Icons.photo_library,
                           color: AppColors.oldBlue,
@@ -169,12 +177,14 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                       ),
                     ),
                     const Gap(24.0),
+
+                    // Tombol Simpan
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          state is PostsLoading ? null : _submit();
-                        },
+                        onPressed: state is PostsLoading
+                            ? null
+                            : _submit, // ✅ fix disable
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.lightBlue,
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -182,13 +192,17 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        child: const Text(
-                          'Simpan',
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 18,
-                          ),
-                        ),
+                        child: state is PostsLoading
+                            ? const CircularProgressIndicator(
+                                color: AppColors.white,
+                              ) // ✅ indikator loading
+                            : const Text(
+                                'Simpan',
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
                       ),
                     ),
                   ],

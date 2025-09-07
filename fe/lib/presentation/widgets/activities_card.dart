@@ -7,6 +7,7 @@ class ActivitiesCard extends StatelessWidget {
   final String title;
   final String author;
   final String date;
+  final String? imageUrl; // ✅ tambah opsional untuk gambar
   final VoidCallback onTap;
 
   const ActivitiesCard({
@@ -14,20 +15,20 @@ class ActivitiesCard extends StatelessWidget {
     required this.title,
     required this.author,
     required this.date,
+    this.imageUrl,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(12),
-        ),
-        elevation: 2,
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
         child: Padding(
-          padding: EdgeInsetsGeometry.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -36,16 +37,24 @@ class ActivitiesCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.lightGray,
                   borderRadius: BorderRadius.circular(8),
+                  image: imageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(imageUrl!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
-                child: const Center(
-                  child: Icon(
-                    Icons.photo_library,
-                    size: 50,
-                    color: AppColors.mediumGray,
-                  ),
-                ),
+                child: imageUrl == null
+                    ? const Center(
+                        child: Icon(
+                          Icons.photo_library,
+                          size: 50,
+                          color: AppColors.mediumGray,
+                        ),
+                      )
+                    : null,
               ),
-              Gap(12),
+              const Gap(12),
               PoppinText(
                 text: title,
                 styles: StyleText(
@@ -54,12 +63,12 @@ class ActivitiesCard extends StatelessWidget {
                   color: AppColors.darkGray,
                 ),
               ),
-              Gap(4),
+              const Gap(4),
               PoppinText(
                 text: "Oleh : $author",
                 styles: StyleText(size: 14, color: AppColors.mediumGray),
               ),
-              Gap(4),
+              const Gap(4),
               PoppinText(
                 text: date,
                 styles: StyleText(color: AppColors.mediumGray),

@@ -13,12 +13,21 @@ class SuccessResponse<T> {
 
   factory SuccessResponse.fromJson(
     Map<String, dynamic> json,
-    T Function(Map<String, dynamic>) fromJsonT,
+    T Function(dynamic) fromJsonT,
   ) {
+    if (json['statusCode'] == null) {
+      throw ArgumentError('Missing required field: statusCode');
+    }
+    if (json['data'] == null) {
+      throw ArgumentError('Missing required field: data');
+    }
+
     return SuccessResponse(
       success: json['success'] ?? true,
-      statusCode: json['statusCode'],
-      message: json['message'] ?? '',
+      statusCode: json['statusCode'] is int
+          ? json['statusCode']
+          : int.tryParse(json['statusCode'].toString()) ?? 0,
+      message: json['message']?.toString() ?? '',
       data: fromJsonT(json['data']),
     );
   }
@@ -45,10 +54,16 @@ class ErrorResponse {
   });
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) {
+    if (json['statusCode'] == null) {
+      throw ArgumentError('Missing required field: statusCode');
+    }
+
     return ErrorResponse(
       success: json['success'] ?? false,
-      statusCode: json['statusCode'],
-      message: json['message'] ?? '',
+      statusCode: json['statusCode'] is int
+          ? json['statusCode']
+          : int.tryParse(json['statusCode'].toString()),
+      message: json['message']?.toString() ?? '',
     );
   }
 
