@@ -1,7 +1,8 @@
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/presentation/views/desktop/home/activity_detail_page.dart';
-import 'package:fe/presentation/views/desktop/home/add_edit_activity_page.dart';
+import 'package:fe/presentation/views/desktop/home/add_activity.dart';
+import 'package:fe/presentation/views/desktop/home/edit_activity.dart';
 import 'package:fe/presentation/widgets/my_activity_card.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +59,7 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
-                        const DesktopAddEditActivityPage(isEditing: false),
+                    builder: (context) => const DesktopAddActivityPage(),
                   ),
                 );
               },
@@ -92,8 +92,7 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                   onEdit: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const DesktopAddEditActivityPage(isEditing: true),
+                        builder: (context) => const DesktopEditActivityPage(),
                       ),
                     );
                   },

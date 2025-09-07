@@ -5,6 +5,7 @@ import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
 import 'package:fe/presentation/views/desktop/auth/register_page.dart';
+import 'package:fe/presentation/views/desktop/home/home_page.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -231,6 +232,12 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                                       email: email,
                                       password: password,
                                     ),
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DesktopHomePage(),
                                   ),
                                 );
                               },

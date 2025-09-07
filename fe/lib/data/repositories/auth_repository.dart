@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:fe/core/constants/variabel.dart';
 import 'package:fe/data/models/request/auth_request.dart';
-import 'package:fe/data/models/response/auth_response.dart';
+import 'package:fe/data/models/response/response_model.dart';
+import 'package:fe/data/models/user/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository {
@@ -19,7 +20,10 @@ class AuthRepository {
       final jsonData = jsonDecode(response.body);
 
       if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
-        return SuccessResponse.fromJson(jsonData);
+        return SuccessResponse<User>.fromJson(
+          jsonData,
+          (data) => User.fromJson(data),
+        );
       } else {
         return ErrorResponse.fromJson(jsonData);
       }
@@ -44,7 +48,10 @@ class AuthRepository {
       final jsonData = jsonDecode(response.body);
 
       if (jsonData['statusCode'] == 201 && jsonData['success'] == true) {
-        return SuccessResponse.fromJson(jsonData);
+        return SuccessResponse<User>.fromJson(
+          jsonData,
+          (data) => User.fromJson(data), //callback untuk parsing data
+        );
       } else {
         return ErrorResponse.fromJson(jsonData);
       }
