@@ -80,7 +80,7 @@ class DesktopActivityDetailPage extends StatelessWidget {
 
                       // Penulis
                       PoppinText(
-                        text: 'Oleh: ${post.authorId}',
+                        text: 'Oleh: ${post.author.username}',
                         styles: StyleText(
                           size: 18,
                           color: AppColors.mediumGray,

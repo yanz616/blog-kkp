@@ -1,6 +1,13 @@
 import 'package:intl/intl.dart';
 
 class DateTimeHelper {
+  static String formatDate(String isoDate) {
+    final dateTime = DateTime.parse(
+      isoDate,
+    ); // parsing dari "2025-09-07T07:03:11.762Z"
+    return DateFormat('dd-MMMM-yyyy').format(dateTime);
+  }
+
   /// Helper untuk parsing tanggal dengan fallback
   static DateTime? parseDate(dynamic dateStr) {
     if (dateStr == null) return null;

@@ -18,9 +18,9 @@ class SuccessResponse<T> {
     if (json['statusCode'] == null) {
       throw ArgumentError('Missing required field: statusCode');
     }
-    if (json['data'] == null) {
-      throw ArgumentError('Missing required field: data');
-    }
+    // if (json['data'] == null) {
+    //   throw ArgumentError('Missing required field: data');
+    // }
 
     return SuccessResponse(
       success: json['success'] ?? true,

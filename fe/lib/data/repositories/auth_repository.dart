@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:fe/core/constants/variabel.dart';
-import 'package:fe/data/models/dummy/dummy_model.dart';
+// import 'package:fe/data/models/dummy/dummy_model.dart';
 import 'package:fe/data/models/request/auth_request.dart';
 import 'package:fe/data/models/response/response_model.dart';
 import 'package:fe/data/models/user/user.dart';
@@ -14,56 +14,55 @@ class AuthRepository {
   // Login
   Future<dynamic> login(LoginRequest request) async {
     try {
-      // final response = await http.post(
-      //   Uri.parse('$baseUrl/v1/login'),
-      //   body: jsonEncode(request.toJson()),
-      //   headers: {'Content-Type': 'application/json'},
-      // );
-
-      // final jsonData = jsonDecode(response.body);
-
-      final matchedUser = dummyUsers.firstWhere(
-        (u) => u.email == request.email && u.password == request.password,
-        orElse: () => User(
-          id: -1,
-          username: "",
-          email: "",
-          avatar: "",
-          token: "",
-          password: "",
-          createdAt: "",
-        ),
+      final response = await http.post(
+        Uri.parse('$baseUrl/v1/login'),
+        body: jsonEncode(request.toJson()),
+        headers: {'Content-Type': 'application/json'},
       );
 
-      if (matchedUser.id != -1) {
-        return SuccessResponse<User>(
-          success: true,
-          statusCode: 200,
-          message: message,
-          data: matchedUser,
-        );
-      } else {
-        return ErrorResponse(
-          success: false,
-          statusCode: 400,
-          message: errorMessage,
-        );
-      }
+      final jsonData = jsonDecode(response.body);
 
-      // if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
-      //   return SuccessResponse<User>.fromJson(
-      //     jsonData,
-      //     // (data) => User.fromJson(data),
-      //     (data) => user,
+      // final matchedUser = dummyUsers.firstWhere(
+      //   (u) => u.email == request.email && u.password == request.password,
+      //   orElse: () => User(
+      //     id: -1,
+      //     username: "",
+      //     email: "",
+      //     avatar: "",
+      //     token: "",
+      //     password: "",
+      //     createdAt: "",
+      //   ),
+      // );
+
+      // if (matchedUser.id != -1) {
+      //   return SuccessResponse<User>(
+      //     success: true,
+      //     statusCode: 200,
+      //     message: message,
+      //     data: matchedUser,
       //   );
       // } else {
-      //   return ErrorResponse.fromJson(jsonData);
       //   return ErrorResponse(
       //     success: false,
       //     statusCode: 400,
       //     message: errorMessage,
       //   );
       // }
+
+      if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
+        return SuccessResponse<User>.fromJson(
+          jsonData,
+          (data) => User.fromJson(data),
+        );
+      } else {
+        return ErrorResponse.fromJson(jsonData);
+        return ErrorResponse(
+          success: false,
+          statusCode: 400,
+          message: errorMessage,
+        );
+      }
     } catch (e) {
       // print(e);
       return ErrorResponse(
