@@ -1,4 +1,5 @@
 import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/data/helpers/date_time_helper.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -8,6 +9,7 @@ class ActivitiesCard extends StatelessWidget {
   final String author;
   final String date;
   final String? imageUrl;
+  final String? avatar;
   final VoidCallback onTap;
 
   const ActivitiesCard({
@@ -16,6 +18,7 @@ class ActivitiesCard extends StatelessWidget {
     required this.author,
     required this.date,
     this.imageUrl,
+    this.avatar,
     required this.onTap,
   });
 
@@ -37,22 +40,24 @@ class ActivitiesCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.lightGray,
                   borderRadius: BorderRadius.circular(8),
-                  image: imageUrl != null
-                      ? DecorationImage(
-                          image: NetworkImage(imageUrl!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
+                  image:
+                      imageUrl != null
+                          ? DecorationImage(
+                            image: NetworkImage(imageUrl!),
+                            fit: BoxFit.cover,
+                          )
+                          : null,
                 ),
-                child: imageUrl == null
-                    ? const Center(
-                        child: Icon(
-                          Icons.photo_library,
-                          size: 50,
-                          color: AppColors.mediumGray,
-                        ),
-                      )
-                    : null,
+                child:
+                    imageUrl == null
+                        ? const Center(
+                          child: Icon(
+                            Icons.photo_library,
+                            size: 50,
+                            color: AppColors.mediumGray,
+                          ),
+                        )
+                        : null,
               ),
               const Gap(12),
               PoppinText(
@@ -64,13 +69,19 @@ class ActivitiesCard extends StatelessWidget {
                 ),
               ),
               const Gap(4),
-              PoppinText(
-                text: "Oleh : $author",
-                styles: StyleText(size: 14, color: AppColors.mediumGray),
+              Row(
+                children: [
+                  CircleAvatar(backgroundImage: NetworkImage(avatar ?? "")),
+                  const Gap(4),
+                  PoppinText(
+                    text: author,
+                    styles: StyleText(size: 14, color: AppColors.mediumGray),
+                  ),
+                ],
               ),
               const Gap(4),
               PoppinText(
-                text: date,
+                text: DateTimeHelper.formatDate(date),
                 styles: StyleText(color: AppColors.mediumGray),
               ),
             ],

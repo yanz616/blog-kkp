@@ -57,7 +57,7 @@ class DesktopHomePage extends StatelessWidget {
                       final post = posts[index];
                       return ActivitiesCard(
                         title: post.title,
-                        author: post.authorId.toString(),
+                        author: post.author.username,
                         date: post.createdAt.toString(),
                         onTap: () {
                           Navigator.of(context).push(

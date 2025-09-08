@@ -11,18 +11,19 @@ class PostRepository {
   final String baseUrl = Variabel.baseUrl;
 
   Future<dynamic> fetchPosts() async {
-    final token = await LocalStorage.getString();
-    if (token == null) throw Exception("Token Not Found");
+    // final token = await LocalStorage.getString();
+    // if (token == null) throw Exception("Token Not Found");
 
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/v1/posts'),
         headers: {
-          'Authorization': 'Bearer $token',
+          // 'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
       final jsonData = jsonDecode(response.body);
+      print(jsonData);
 
       if (jsonData['statusCode'] == 200) {
         return SuccessResponse<List<PostModel>>.fromJson(
@@ -33,6 +34,7 @@ class PostRepository {
         return ErrorResponse.fromJson(jsonData);
       }
     } catch (e) {
+      print(e);
       return ErrorResponse(
         success: false,
         statusCode: 500,
@@ -117,9 +119,10 @@ class PostRepository {
         );
       }
 
-      final statusCode = jsonData['statusCode'] is int
-          ? jsonData['statusCode']
-          : response.statusCode;
+      final statusCode =
+          jsonData['statusCode'] is int
+              ? jsonData['statusCode']
+              : response.statusCode;
 
       if (statusCode == 200 || statusCode == 201) {
         return SuccessResponse<PostModel>.fromJson(
