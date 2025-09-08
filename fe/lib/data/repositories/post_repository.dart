@@ -119,12 +119,13 @@ class PostRepository {
         );
       }
 
-      final statusCode =
-          jsonData['statusCode'] is int
-              ? jsonData['statusCode']
-              : response.statusCode;
+      final statusCode = jsonData['statusCode'];
+      // is int
+      //         ? jsonData['statusCode']
+      //         : response.statusCode;
 
       if (statusCode == 200 || statusCode == 201) {
+        print(jsonData);
         return SuccessResponse<PostModel>.fromJson(
           jsonData,
           (data) => PostModel.fromJson(data),

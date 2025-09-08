@@ -35,6 +35,19 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         emit(PostsFailure("Terjadi kesalahan periksa koneksi internet anda"));
       }
     });
+    on<CreatePost>((event, emit) async {
+      emit(const PostsLoading());
+      try {
+        final response = await postRepository.createPost(event.postRequest);
+        if (response is SuccessResponse<PostModel>) {
+          emit(PostsSuccess(response.message));
+        } else if (response is ErrorResponse) {
+          emit(PostsFailure(response.message));
+        }
+      } catch (e) {
+        emit(const PostsFailure("Terjadi kesalahan saat membuat post."));
+      }
+    });
   }
   // final FakePostRepository fakePostRepository;
 
@@ -71,20 +84,20 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   //     }
   //   });
 
-  //   //  Create post
-  //   on<CreatePost>((event, emit) async {
-  //     emit(const PostsLoading());
-  //     try {
-  //       final response = await fakePostRepository.createPost(event.postRequest);
-  //       if (response is SuccessResponse<PostModel>) {
-  //         emit(PostsSuccess(response.message));
-  //       } else if (response is ErrorResponse) {
-  //         emit(PostsFailure(response.message));
-  //       }
-  //     } catch (e) {
-  //       emit(const PostsFailure("Terjadi kesalahan saat membuat post."));
+  //  Create post
+  // on<CreatePost>((event, emit) async {
+  //   emit(const PostsLoading());
+  //   try {
+  //     final response = await fakePostRepository.createPost(event.postRequest);
+  //     if (response is SuccessResponse<PostModel>) {
+  //       emit(PostsSuccess(response.message));
+  //     } else if (response is ErrorResponse) {
+  //       emit(PostsFailure(response.message));
   //     }
-  //   });
+  //   } catch (e) {
+  //     emit(const PostsFailure("Terjadi kesalahan saat membuat post."));
+  //   }
+  // });
 
   //   //  Delete post
   //   on<DeletePost>((event, emit) async {

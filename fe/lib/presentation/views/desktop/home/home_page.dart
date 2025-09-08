@@ -26,12 +26,12 @@ class DesktopHomePage extends StatelessWidget {
               color: AppColors.darkGray,
             ),
           ),
-          backgroundColor: Colors.transparent,
+          backgroundColor: AppColors.lightBlue,
           elevation: 0,
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: BlocBuilder<PostBloc, PostState>(
               builder: (context, state) {
                 if (state is PostsLoading) {
@@ -48,7 +48,7 @@ class DesktopHomePage extends StatelessWidget {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
-                          childAspectRatio: 1.0,
+                          childAspectRatio: 0.9,
                           crossAxisSpacing: 16.0,
                           mainAxisSpacing: 18.0,
                         ),
@@ -58,12 +58,15 @@ class DesktopHomePage extends StatelessWidget {
                       return ActivitiesCard(
                         title: post.title,
                         author: post.author.username,
-                        date: post.createdAt.toString(),
+                        date: post.createdAt!,
+                        avatar: post.author.avatar,
+                        imageUrl: post.image,
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  DesktopActivityDetailPage(post: post),
+                              builder:
+                                  (context) =>
+                                      DesktopActivityDetailPage(post: post),
                             ),
                           );
                         },

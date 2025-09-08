@@ -1,14 +1,13 @@
-import 'package:fe/data/helpers/date_time_helper.dart';
-
 class AuthorModel {
   final int id;
   final String username;
-  final String avatar;
+  final String? avatar;
 
   const AuthorModel({
     required this.id,
     required this.username,
-    required this.avatar,
+    this.avatar =
+        "https://i.pinimg.com/1200x/f2/8e/8d/f28e8d13bb1cf3f23a2db4586fe77c03.jpg",
   });
 
   factory AuthorModel.fromJson(Map<String, dynamic> json) {

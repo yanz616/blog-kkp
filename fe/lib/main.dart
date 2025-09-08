@@ -5,13 +5,18 @@ import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/posts/post_bloc.dart';
 import 'package:fe/presentation/layouts/rensponsive_layout.dart';
 import 'package:fe/presentation/views/desktop/auth/login_page.dart';
-import 'package:fe/presentation/views/mobile/auth/login_page.dart';
 import 'package:fe/presentation/views/mobile/navigation/mobile_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main(List<String> args) {
-  runApp(MyApp());
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inisialisasi locale Bahasa Indonesia
+  await initializeDateFormatting('id_ID', null);
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +32,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: AppColors.youngGray),
-        home: ResponsiveLayout(
+        home: const ResponsiveLayout(
           mobileLayout: MobileMainScaffold(),
           desktopLayout: DesktopLoginPage(),
         ),

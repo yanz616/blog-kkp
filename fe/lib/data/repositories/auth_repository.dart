@@ -57,11 +57,11 @@ class AuthRepository {
         );
       } else {
         return ErrorResponse.fromJson(jsonData);
-        return ErrorResponse(
-          success: false,
-          statusCode: 400,
-          message: errorMessage,
-        );
+        // return ErrorResponse(
+        //   success: false,
+        //   statusCode: 400,
+        //   message: errorMessage,
+        // );
       }
     } catch (e) {
       // print(e);
