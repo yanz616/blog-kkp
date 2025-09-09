@@ -43,7 +43,7 @@ class ActivitiesCard extends StatelessWidget {
                   image:
                       imageUrl != null
                           ? DecorationImage(
-                            image: NetworkImage(imageUrl!),
+                            image: NetworkImage(imageUrl!.trim()),
                             fit: BoxFit.cover,
                           )
                           : null,

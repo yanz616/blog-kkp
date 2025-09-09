@@ -9,32 +9,48 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final PostRepository postRepository;
 
   PostBloc(this.postRepository) : super(PostsInitial()) {
+    //semua postingan
     on<FetchPosts>((event, emit) async {
-      emit(PostsLoading());
+      emit(const PostsLoading());
       try {
         final response = await postRepository.fetchPosts();
         if (response is SuccessResponse<List<PostModel>>) {
-          emit(PostsLoaded(response.data, response.message));
+          emit(
+            state is PostsLoaded
+                ? (state as PostsLoaded).copyWith(allPosts: response.data)
+                : PostsLoaded(allPosts: response.data),
+          );
         } else if (response is ErrorResponse) {
           emit(PostsFailure(response.message));
         }
-      } catch (e) {
-        emit(PostsFailure("Terjadi kesalahan periksa koneksi internet anda"));
+      } catch (_) {
+        emit(
+          const PostsFailure("Terjadi kesalahan periksa koneksi internet anda"),
+        );
       }
     });
-    on<FetchPostById>((event, emit) async {
-      emit(PostsLoading());
+
+    on<FetchMyPosts>((event, emit) async {
+      emit(const PostsLoading());
       try {
-        final response = await postRepository.fetchPost(event.id);
-        if (response is SuccessResponse<PostModel>) {
-          emit(PostLoaded(response.data, response.message));
+        final response = await postRepository.fetchMyPosts();
+        if (response is SuccessResponse<List<PostModel>>) {
+          emit(
+            state is PostsLoaded
+                ? (state as PostsLoaded).copyWith(myPosts: response.data)
+                : PostsLoaded(myPosts: response.data),
+          );
         } else if (response is ErrorResponse) {
           emit(PostsFailure(response.message));
         }
-      } catch (e) {
-        emit(PostsFailure("Terjadi kesalahan periksa koneksi internet anda"));
+      } catch (_) {
+        emit(
+          const PostsFailure("Terjadi kesalahan periksa koneksi internet anda"),
+        );
       }
     });
+
+    //
     on<CreatePost>((event, emit) async {
       emit(const PostsLoading());
       try {
@@ -49,88 +65,4 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       }
     });
   }
-  // final FakePostRepository fakePostRepository;
-
-  // PostBloc(this.fakePostRepository) : super(const PostsInitial()) {
-  //   //  Get all posts
-  //   on<FetchPosts>((event, emit) async {
-  //     emit(const PostsLoading());
-  //     try {
-  //       final response = await fakePostRepository.getPosts();
-  //       if (response is SuccessResponse<List<PostModel>>) {
-  //         emit(PostsLoaded(response.data, response.message));
-  //       } else if (response is ErrorResponse) {
-  //         emit(PostsFailure(response.message));
-  //       }
-  //     } catch (e) {
-  //       emit(const PostsFailure("Terjadi kesalahan saat mengambil postingan."));
-  //     }
-  //   });
-
-  //   //  Get post by id
-  //   on<FetchPostById>((event, emit) async {
-  //     emit(const PostsLoading());
-  //     try {
-  //       final response = await fakePostRepository.getPostById(event.id);
-  //       if (response is SuccessResponse<PostModel>) {
-  //         emit(PostLoaded(response.data, response.message));
-  //       } else if (response is ErrorResponse) {
-  //         emit(PostsFailure(response.message));
-  //       }
-  //     } catch (e) {
-  //       emit(
-  //         const PostsFailure("Terjadi kesalahan saat mengambil detail post."),
-  //       );
-  //     }
-  //   });
-
-  //  Create post
-  // on<CreatePost>((event, emit) async {
-  //   emit(const PostsLoading());
-  //   try {
-  //     final response = await fakePostRepository.createPost(event.postRequest);
-  //     if (response is SuccessResponse<PostModel>) {
-  //       emit(PostsSuccess(response.message));
-  //     } else if (response is ErrorResponse) {
-  //       emit(PostsFailure(response.message));
-  //     }
-  //   } catch (e) {
-  //     emit(const PostsFailure("Terjadi kesalahan saat membuat post."));
-  //   }
-  // });
-
-  //   //  Delete post
-  //   on<DeletePost>((event, emit) async {
-  //     emit(const PostsLoading());
-  //     try {
-  //       final response = await fakePostRepository.deletePost(event.id);
-  //       if (response is SuccessResponse) {
-  //         emit(PostsSuccess(response.message));
-  //       } else if (response is ErrorResponse) {
-  //         emit(PostsFailure(response.message));
-  //       }
-  //     } catch (e) {
-  //       emit(const PostsFailure("Terjadi kesalahan saat menghapus post."));
-  //     }
-  //   });
-
-  //   //  Get my posts
-  //   on<FetchMyPost>((event, emit) async {
-  //     emit(const PostsLoading());
-  //     try {
-  //       final response = await fakePostRepository.getMyPosts(event.id);
-  //       if (response is SuccessResponse<List<PostModel>>) {
-  //         emit(PostsLoaded(response.data, response.message));
-  //       } else if (response is ErrorResponse) {
-  //         emit(PostsFailure(response.message));
-  //       }
-  //     } catch (e) {
-  //       emit(
-  //         const PostsFailure(
-  //           "Terjadi kesalahan saat mengambil postingan saya.",
-  //         ),
-  //       );
-  //     }
-  //   });
-  // }
 }

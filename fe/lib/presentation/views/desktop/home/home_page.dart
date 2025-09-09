@@ -1,6 +1,5 @@
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
-import 'package:fe/data/models/posts/post_model.dart';
 import 'package:fe/presentation/blocs/posts/post_bloc.dart';
 import 'package:fe/presentation/blocs/posts/post_event.dart';
 import 'package:fe/presentation/blocs/posts/post_state.dart';
@@ -10,12 +9,22 @@ import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DesktopHomePage extends StatelessWidget {
+class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<DesktopHomePage> createState() => _DesktopHomePageState();
+}
+
+class _DesktopHomePageState extends State<DesktopHomePage> {
+  @override
+  void initState() {
     context.read<PostBloc>().add(FetchPosts());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         AppBar(
@@ -37,12 +46,9 @@ class DesktopHomePage extends StatelessWidget {
                 if (state is PostsLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is PostsLoaded) {
-                  final List<PostModel> posts = state.posts;
-                  if (state.posts.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Postingan masi Kosong")),
-                    );
-                    return SizedBox.shrink();
+                  final posts = state.allPosts;
+                  if (posts.isEmpty) {
+                    return const Center(child: Text("Postingan masih kosong"));
                   }
                   return GridView.builder(
                     gridDelegate:
@@ -52,21 +58,21 @@ class DesktopHomePage extends StatelessWidget {
                           crossAxisSpacing: 16.0,
                           mainAxisSpacing: 18.0,
                         ),
-                    itemCount: state.posts.length,
+                    itemCount: posts.length,
                     itemBuilder: (context, index) {
-                      final post = posts[index];
+                      final item = posts[index];
                       return ActivitiesCard(
-                        title: post.title,
-                        author: post.author.username,
-                        date: post.createdAt!,
-                        avatar: post.author.avatar,
-                        imageUrl: post.image,
+                        title: item.title,
+                        author: item.author.username,
+                        date: item.createdAt!,
+                        avatar: item.author.avatar,
+                        imageUrl: item.image,
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                      DesktopActivityDetailPage(post: post),
+                                      DesktopActivityDetailPage(post: item),
                             ),
                           );
                         },
@@ -76,7 +82,7 @@ class DesktopHomePage extends StatelessWidget {
                 } else if (state is PostsFailure) {
                   return Center(child: Text(state.message));
                 } else {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
               },
             ),

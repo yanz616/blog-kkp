@@ -11,21 +11,15 @@ class PostRepository {
   final String baseUrl = Variabel.baseUrl;
 
   Future<dynamic> fetchPosts() async {
-    // final token = await LocalStorage.getString();
-    // if (token == null) throw Exception("Token Not Found");
-
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/v1/posts'),
-        headers: {
-          // 'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
       final jsonData = jsonDecode(response.body);
-      print(jsonData);
 
-      if (jsonData['statusCode'] == 200) {
+      if (response.statusCode == 200) {
+        print(response.body);
         return SuccessResponse<List<PostModel>>.fromJson(
           jsonData,
           (data) => (data as List).map((e) => PostModel.fromJson(e)).toList(),
@@ -34,7 +28,6 @@ class PostRepository {
         return ErrorResponse.fromJson(jsonData);
       }
     } catch (e) {
-      print(e);
       return ErrorResponse(
         success: false,
         statusCode: 500,
@@ -43,23 +36,26 @@ class PostRepository {
     }
   }
 
-  Future<dynamic> fetchPost(int id) async {
+  Future<dynamic> fetchMyPosts() async {
     final token = await LocalStorage.getString();
     if (token == null) throw Exception("Token Not Found");
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/v1/posts/$id'),
+        Uri.parse('$baseUrl/v1/me/posts'),
         headers: {
-          'Authorzation': 'Bearer $token',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
 
       final jsonData = jsonDecode(response.body);
-      if (jsonData['statusCode'] == 200) {
-        return SuccessResponse<PostModel>.fromJson(
+      // print(jsonData);
+      if (response.statusCode == 200) {
+        print("FetchMyPosts status: ${response.statusCode}");
+        print("FetchMyPosts body: ${response.body}");
+        return SuccessResponse<List<PostModel>>.fromJson(
           jsonData,
-          (data) => PostModel.fromJson(data),
+          (data) => (data as List).map((e) => PostModel.fromJson(e)).toList(),
         );
       } else {
         return ErrorResponse.fromJson(jsonData);
@@ -68,7 +64,7 @@ class PostRepository {
       return ErrorResponse(
         success: false,
         statusCode: 500,
-        message: "Tejadi Kesalahan koneksi server dan jaringan",
+        message: "Tejadi Kesalahan koneksi server dan jaringan $e",
       );
     }
   }
@@ -123,6 +119,7 @@ class PostRepository {
       // is int
       //         ? jsonData['statusCode']
       //         : response.statusCode;
+      print(jsonData);
 
       if (statusCode == 200 || statusCode == 201) {
         print(jsonData);

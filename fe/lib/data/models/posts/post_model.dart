@@ -3,12 +3,7 @@ class AuthorModel {
   final String username;
   final String? avatar;
 
-  const AuthorModel({
-    required this.id,
-    required this.username,
-    this.avatar =
-        "https://i.pinimg.com/1200x/f2/8e/8d/f28e8d13bb1cf3f23a2db4586fe77c03.jpg",
-  });
+  const AuthorModel({required this.id, required this.username, this.avatar});
 
   factory AuthorModel.fromJson(Map<String, dynamic> json) {
     return AuthorModel(
@@ -43,10 +38,6 @@ class PostModel {
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
-    if (json['id'] == null) {
-      throw ArgumentError('Missing required field: id');
-    }
-
     return PostModel(
       id:
           json['id'] is int
@@ -54,7 +45,7 @@ class PostModel {
               : int.parse(json['id'].toString()), // kalau gagal -> lempar error
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-      image: json['image']?.toString(),
+      image: json['image']?.toString().trim(),
       author: AuthorModel.fromJson(json['author']),
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
@@ -67,7 +58,7 @@ class PostModel {
       'title': title,
       'content': content,
       'image': image,
-      'author': author,
+      'author': author.toJson(),
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };

@@ -2,14 +2,16 @@ import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/data/helpers/date_time_helper.dart';
 import 'package:fe/data/models/posts/post_model.dart';
+import 'package:fe/data/models/user/user.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class DesktopActivityDetailPage extends StatelessWidget {
   final PostModel post;
+  final User? user;
 
-  const DesktopActivityDetailPage({super.key, required this.post});
+  const DesktopActivityDetailPage({super.key, required this.post, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,10 @@ class DesktopActivityDetailPage extends StatelessWidget {
                             ),
                             const Gap(10),
                             PoppinText(
-                              text: post.author.username,
+                              text:
+                                  post.author.username == user!.username
+                                      ? "Anda"
+                                      : post.author.username,
                               styles: StyleText(
                                 size: 18,
                                 weight: AppWeights.semiBold,

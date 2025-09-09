@@ -8,10 +8,8 @@ class FetchPosts extends PostEvent {
   const FetchPosts();
 }
 
-class FetchPostById extends PostEvent {
-  final int id;
-
-  const FetchPostById(this.id);
+class FetchMyPosts extends PostEvent {
+  const FetchMyPosts();
 }
 
 class CreatePost extends PostEvent {
@@ -24,9 +22,4 @@ class DeletePost extends PostEvent {
   final int id;
 
   const DeletePost(this.id);
-}
-
-class FetchMyPost extends PostEvent {
-  final int id;
-  const FetchMyPost(this.id);
 }
