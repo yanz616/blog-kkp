@@ -22,34 +22,6 @@ class AuthRepository {
 
       final jsonData = jsonDecode(response.body);
 
-      // final matchedUser = dummyUsers.firstWhere(
-      //   (u) => u.email == request.email && u.password == request.password,
-      //   orElse: () => User(
-      //     id: -1,
-      //     username: "",
-      //     email: "",
-      //     avatar: "",
-      //     token: "",
-      //     password: "",
-      //     createdAt: "",
-      //   ),
-      // );
-
-      // if (matchedUser.id != -1) {
-      //   return SuccessResponse<User>(
-      //     success: true,
-      //     statusCode: 200,
-      //     message: message,
-      //     data: matchedUser,
-      //   );
-      // } else {
-      //   return ErrorResponse(
-      //     success: false,
-      //     statusCode: 400,
-      //     message: errorMessage,
-      //   );
-      // }
-
       if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
         return SuccessResponse<User>.fromJson(
           jsonData,
@@ -57,11 +29,11 @@ class AuthRepository {
         );
       } else {
         return ErrorResponse.fromJson(jsonData);
-        return ErrorResponse(
-          success: false,
-          statusCode: 400,
-          message: errorMessage,
-        );
+        // return ErrorResponse(
+        //   success: false,
+        //   statusCode: 400,
+        //   message: errorMessage,
+        // );
       }
     } catch (e) {
       // print(e);

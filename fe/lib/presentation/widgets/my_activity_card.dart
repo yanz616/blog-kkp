@@ -1,3 +1,7 @@
+import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/data/helpers/date_time_helper.dart';
+import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -33,44 +37,53 @@ class MyActivityCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (imageUrl != null) ...[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    imageUrl!,
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGray,
+                  borderRadius: BorderRadius.circular(8),
+                  image:
+                      imageUrl != null
+                          ? DecorationImage(
+                            image: NetworkImage(imageUrl!.trim()),
+                            fit: BoxFit.cover,
+                          )
+                          : null,
                 ),
-                const SizedBox(height: 12.0),
-              ],
+                child:
+                    imageUrl == null
+                        ? const Center(
+                          child: Icon(
+                            Icons.photo_library,
+                            size: 50,
+                            color: AppColors.mediumGray,
+                          ),
+                        )
+                        : null,
+              ),
 
               // konten utama
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              PoppinText(
+                text: title,
+                styles: StyleText(size: 16, weight: AppWeights.bold),
               ),
-              const SizedBox(height: 4.0),
-              Text(
-                date,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              const Gap(4),
+              PoppinText(
+                text: DateTimeHelper.formatLongDate(date),
+                styles: StyleText(size: 14, color: AppColors.mediumGray),
               ),
-              Gap(12),
+              const Gap(12),
               // tombol aksi
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   IconButton(
                     onPressed: onEdit,
-                    icon: const Icon(Icons.edit, color: Colors.amber),
+                    icon: const Icon(Icons.edit, color: AppColors.amber),
                   ),
                   IconButton(
                     onPressed: onDelete,
-                    icon: const Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: AppColors.red),
                   ),
                 ],
               ),

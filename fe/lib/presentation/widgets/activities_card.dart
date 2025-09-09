@@ -18,7 +18,7 @@ class ActivitiesCard extends StatelessWidget {
     required this.author,
     required this.date,
     this.imageUrl,
-    this.avatar,
+    required this.avatar,
     required this.onTap,
   });
 
@@ -43,7 +43,7 @@ class ActivitiesCard extends StatelessWidget {
                   image:
                       imageUrl != null
                           ? DecorationImage(
-                            image: NetworkImage(imageUrl!),
+                            image: NetworkImage(imageUrl!.trim()),
                             fit: BoxFit.cover,
                           )
                           : null,
@@ -71,7 +71,7 @@ class ActivitiesCard extends StatelessWidget {
               const Gap(4),
               Row(
                 children: [
-                  CircleAvatar(backgroundImage: NetworkImage(avatar ?? "")),
+                  CircleAvatar(backgroundImage: NetworkImage(avatar!)),
                   const Gap(4),
                   PoppinText(
                     text: author,
@@ -81,7 +81,7 @@ class ActivitiesCard extends StatelessWidget {
               ),
               const Gap(4),
               PoppinText(
-                text: DateTimeHelper.formatDate(date),
+                text: DateTimeHelper.formatLongDate(date),
                 styles: StyleText(color: AppColors.mediumGray),
               ),
             ],

@@ -52,6 +52,7 @@ class _MobileMyActivitiesPageState extends State<MobileMyActivitiesPage> {
           return MyActivityCard(
             title: _activities[index].title,
             date: _activities[index].date,
+
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -62,8 +63,8 @@ class _MobileMyActivitiesPageState extends State<MobileMyActivitiesPage> {
             onEdit: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const AddEditActivityPage(isEditing: true),
+                  builder:
+                      (context) => const AddEditActivityPage(isEditing: true),
                 ),
               );
             },

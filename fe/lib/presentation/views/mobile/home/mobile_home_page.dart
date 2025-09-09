@@ -27,7 +27,7 @@ class MobileHomePage extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           }
           if (state is PostsLoaded) {
-            final post = state.posts;
+            final post = state.allPosts;
             return ListView.builder(
               itemCount: post.length,
               itemBuilder: (context, i) {

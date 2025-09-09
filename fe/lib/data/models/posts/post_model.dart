@@ -1,15 +1,9 @@
-import 'package:fe/data/helpers/date_time_helper.dart';
-
 class AuthorModel {
   final int id;
   final String username;
-  final String avatar;
+  final String? avatar;
 
-  const AuthorModel({
-    required this.id,
-    required this.username,
-    required this.avatar,
-  });
+  const AuthorModel({required this.id, required this.username, this.avatar});
 
   factory AuthorModel.fromJson(Map<String, dynamic> json) {
     return AuthorModel(
@@ -44,10 +38,6 @@ class PostModel {
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
-    if (json['id'] == null) {
-      throw ArgumentError('Missing required field: id');
-    }
-
     return PostModel(
       id:
           json['id'] is int
@@ -55,7 +45,7 @@ class PostModel {
               : int.parse(json['id'].toString()), // kalau gagal -> lempar error
       title: json['title'] ?? '',
       content: json['content'] ?? '',
-      image: json['image']?.toString(),
+      image: json['image']?.toString().trim(),
       author: AuthorModel.fromJson(json['author']),
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
@@ -68,7 +58,7 @@ class PostModel {
       'title': title,
       'content': content,
       'image': image,
-      'author': author,
+      'author': author.toJson(),
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
