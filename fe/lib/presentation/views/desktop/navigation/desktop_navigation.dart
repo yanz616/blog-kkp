@@ -1,10 +1,12 @@
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/presentation/views/desktop/auth/login_page.dart';
 import 'package:fe/presentation/views/desktop/home/home_page.dart';
 import 'package:fe/presentation/views/desktop/home/my_activity_page.dart';
 import 'package:fe/presentation/views/desktop/home/profile_page.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DesktopMainScaffold extends StatefulWidget {
   const DesktopMainScaffold({super.key});
@@ -55,7 +57,6 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
     return Scaffold(
       body: Row(
         children: [
-          // Sidebar Navigasi
           Container(
             width: 250,
             color: AppColors.oldBlue,
@@ -80,9 +81,29 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
                 ),
                 _buildNavItem(index: 2, icon: Icons.person, label: 'Profil'),
                 const Spacer(),
-                const ListTile(
-                  leading: Icon(Icons.logout, color: Colors.white),
-                  title: Text('Keluar', style: TextStyle(color: Colors.white)),
+                InkWell(
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.clear();
+
+                    if (!mounted) return;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => DesktopLoginPage(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    });
+                  },
+                  child: const ListTile(
+                    leading: Icon(Icons.logout, color: Colors.white),
+                    title: Text(
+                      'Keluar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/data/models/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({super.key});
+  final User? userData;
+  const EditProfilePage({super.key, this.userData});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -65,10 +67,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         CircleAvatar(
                           radius: 70,
                           backgroundColor: AppColors.lightGray,
-                          backgroundImage: _imageBytes != null
-                              ? MemoryImage(_imageBytes!)
-                              : const NetworkImage('https://i.pravatar.cc/300')
-                                    as ImageProvider,
+                          backgroundImage:
+                              _imageBytes != null
+                                  ? MemoryImage(_imageBytes!)
+                                  : const NetworkImage(
+                                        'https://i.pravatar.cc/300',
+                                      )
+                                      as ImageProvider,
                         ),
                         const Positioned(
                           bottom: 0,
@@ -105,9 +110,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextField(
-                    // controller: TextEditingController(text: 'Jane Doe'),
+                    controller: TextEditingController(
+                      text: widget.userData!.username,
+                    ),
                     decoration: InputDecoration(
-                      labelText: 'Nama Lengkap',
+                      labelText: 'Username',
                       labelStyle: const TextStyle(
                         color: AppColors.mediumGray,
                         fontWeight: AppWeights.regular,
@@ -142,7 +149,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 // Judul Bagian: Informasi Kontak
                 const Padding(
                   padding: EdgeInsets.only(bottom: 12.0),
@@ -160,7 +166,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   padding: const EdgeInsets.only(bottom: 16),
                   child: TextField(
                     controller: TextEditingController(
-                      text: 'jane.doe@diskominfotikntb.go.id',
+                      text: widget.userData!.email,
                     ),
                     decoration: InputDecoration(
                       labelText: 'Email',
@@ -178,26 +184,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
                 // FormField Nomor Telepon
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: TextField(
-                    controller: TextEditingController(text: '081234567890'),
-                    decoration: InputDecoration(
-                      labelText: 'Nomor Telepon',
-                      labelStyle: const TextStyle(
-                        color: AppColors.mediumGray,
-                        fontWeight: AppWeights.regular,
-                      ),
-                      filled: true,
-                      fillColor: AppColors.youngGray,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
 
                 // Tombol Simpan
                 SizedBox(
