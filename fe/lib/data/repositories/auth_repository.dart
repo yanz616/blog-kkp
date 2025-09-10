@@ -32,7 +32,7 @@ class AuthRepository {
         await LocalStorage.setUsername(res.data.username);
         await LocalStorage.setEmail(res.data.email);
         await LocalStorage.setAvatar(res.data.avatar ?? "");
-        await LocalStorage.setCreatedAt(res.data.createdAt);
+        await LocalStorage.setCreatedAt(res.data.createdAt!);
         return res;
       } else {
         return ErrorResponse.fromJson(jsonData);

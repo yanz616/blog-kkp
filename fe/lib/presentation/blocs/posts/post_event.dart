@@ -18,6 +18,13 @@ class CreatePost extends PostEvent {
   const CreatePost(this.postRequest);
 }
 
+class UpdatePost extends PostEvent {
+  final PostRequest postRequest;
+  final int id;
+
+  const UpdatePost(this.postRequest, {required this.id});
+}
+
 class DeletePost extends PostEvent {
   final int id;
 

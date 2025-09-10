@@ -67,13 +67,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         CircleAvatar(
                           radius: 70,
                           backgroundColor: AppColors.lightGray,
-                          backgroundImage:
-                              _imageBytes != null
-                                  ? MemoryImage(_imageBytes!)
-                                  : const NetworkImage(
-                                        'https://i.pravatar.cc/300',
-                                      )
-                                      as ImageProvider,
+                          backgroundImage: NetworkImage(
+                            widget.userData!.avatar!,
+                          ),
                         ),
                         const Positioned(
                           bottom: 0,

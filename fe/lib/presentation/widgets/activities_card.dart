@@ -7,7 +7,7 @@ import 'package:gap/gap.dart';
 class ActivitiesCard extends StatelessWidget {
   final String title;
   final String author;
-  final String date;
+  final String? date;
   final String? imageUrl;
   final String? avatar;
   final VoidCallback onTap;
@@ -40,24 +40,22 @@ class ActivitiesCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.lightGray,
                   borderRadius: BorderRadius.circular(8),
-                  image:
-                      imageUrl != null
-                          ? DecorationImage(
-                            image: NetworkImage(imageUrl!.trim()),
-                            fit: BoxFit.cover,
-                          )
-                          : null,
-                ),
-                child:
-                    imageUrl == null
-                        ? const Center(
-                          child: Icon(
-                            Icons.photo_library,
-                            size: 50,
-                            color: AppColors.mediumGray,
-                          ),
+                  image: imageUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(imageUrl!.trim()),
+                          fit: BoxFit.cover,
                         )
-                        : null,
+                      : null,
+                ),
+                child: imageUrl == null
+                    ? const Center(
+                        child: Icon(
+                          Icons.photo_library,
+                          size: 50,
+                          color: AppColors.mediumGray,
+                        ),
+                      )
+                    : null,
               ),
               const Gap(12),
               PoppinText(
@@ -81,7 +79,7 @@ class ActivitiesCard extends StatelessWidget {
               ),
               const Gap(4),
               PoppinText(
-                text: DateTimeHelper.formatLongDate(date),
+                text: DateTimeHelper.formatLongDate(date!),
                 styles: StyleText(color: AppColors.mediumGray),
               ),
             ],

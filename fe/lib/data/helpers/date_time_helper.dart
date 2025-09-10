@@ -2,9 +2,19 @@ import 'package:intl/intl.dart';
 
 class DateTimeHelper {
   /// Format ke bentuk "sabtu, 06 september 2025"
-  static String formatLongDate(String isoDate) {
-    final dateTime = DateTime.parse(isoDate).toLocal();
-    return DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
+  // static String formatLongDate(String isoDate) {
+  //   final dateTime = DateTime.parse(isoDate).toLocal();
+  //   return DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
+  // }
+  static String formatLongDate(String? isoDate) {
+    if (isoDate == null || isoDate.isEmpty) return "-";
+
+    try {
+      final dateTime = DateTime.parse(isoDate).toLocal();
+      return DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
+    } catch (_) {
+      return isoDate; // fallback string apa adanya
+    }
   }
 
   /// Format ke bentuk "06 sep 2025"

@@ -198,7 +198,6 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                       ),
                     ],
                     const Gap(24),
-
                     // Tombol Simpan
                     SizedBox(
                       width: double.infinity,

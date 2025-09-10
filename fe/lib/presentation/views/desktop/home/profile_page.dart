@@ -71,7 +71,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
           children: <Widget>[
             CircleAvatar(
               radius: 70,
-              backgroundImage: NetworkImage(userData!.avatar!),
+              backgroundImage: NetworkImage(userData!.avatar.toString()),
             ),
             const Gap(24.0),
             PoppinText(
@@ -90,7 +90,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
             const Gap(8.0),
             PoppinText(
               text:
-                  "Bergabung pada : ${DateTimeHelper.formatLongDate(userData!.createdAt)}",
+                  "Bergabung pada : ${DateTimeHelper.formatLongDate(userData?.createdAt)}",
               styles: StyleText(size: 16, color: AppColors.mediumGray),
             ),
             const Gap(40),

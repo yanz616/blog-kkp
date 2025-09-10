@@ -25,7 +25,6 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // context.read<PostBloc>().add(FetchPosts());
     return Column(
       children: [
         AppBar(
@@ -64,16 +63,15 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                       final item = posts[index];
                       return ActivitiesCard(
                         title: item.title,
-                        author: item.author.username,
+                        author: item.author!.username,
                         date: item.createdAt.toString(),
-                        avatar: item.author.avatar,
+                        avatar: item.author!.avatar,
                         imageUrl: item.image,
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      DesktopActivityDetailPage(post: item),
+                              builder: (context) =>
+                                  DesktopActivityDetailPage(post: item),
                             ),
                           );
                         },

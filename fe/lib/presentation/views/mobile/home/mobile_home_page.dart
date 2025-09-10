@@ -34,10 +34,10 @@ class MobileHomePage extends StatelessWidget {
                 final item = post[i];
                 return ActivitiesCard(
                   title: item.title,
-                  author: item.author.username,
+                  author: item.author!.username,
                   date: item.createdAt!,
                   imageUrl: item.image,
-                  avatar: item.author.avatar,
+                  avatar: item.author!.avatar,
                   onTap: () {},
                 );
               },
