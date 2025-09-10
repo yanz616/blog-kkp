@@ -91,6 +91,8 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                         title: items.title,
                         date: items.createdAt!,
                         imageUrl: items.image,
+                        avatar: items.author.avatar,
+                        author: items.author.username,
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(

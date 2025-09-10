@@ -27,7 +27,7 @@ class AuthRepository {
           jsonData,
           (data) => User.fromJson(data),
         );
-        await LocalStorage.setString(res.data.token);
+        await LocalStorage.setString(res.data.token!);
         await LocalStorage.setId(res.data.id);
         await LocalStorage.setUsername(res.data.username);
         await LocalStorage.setEmail(res.data.email);
@@ -63,7 +63,7 @@ class AuthRepository {
 
       final jsonData = jsonDecode(response.body);
 
-      if (jsonData['statusCode'] == 201 && jsonData['success'] == true) {
+      if (response.statusCode == 201) {
         return SuccessResponse<User>.fromJson(
           jsonData,
           (data) => User.fromJson(data), //callback untuk parsing data
@@ -72,10 +72,11 @@ class AuthRepository {
         return ErrorResponse.fromJson(jsonData);
       }
     } catch (e) {
+      print(e);
       return ErrorResponse(
         success: false,
         statusCode: 500,
-        message: "Terjadi kesalahan pada koneksi atau server.",
+        message: "Terjadi kesalahan pada koneksi atau server $e",
       );
     }
   }

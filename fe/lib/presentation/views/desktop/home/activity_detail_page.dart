@@ -8,9 +8,8 @@ import 'package:gap/gap.dart';
 
 class DesktopActivityDetailPage extends StatelessWidget {
   final PostModel post;
-  final AuthorModel? user;
 
-  const DesktopActivityDetailPage({super.key, required this.post, this.user});
+  const DesktopActivityDetailPage({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +74,10 @@ class DesktopActivityDetailPage extends StatelessWidget {
                               ),
                             ),
                             const Gap(10),
+
+                            // nama author
                             PoppinText(
-                              text:
-                                  post.author.username == user!.username
-                                      ? "Anda"
-                                      : post.author.username,
+                              text: post.author.username,
                               styles: StyleText(
                                 size: 18,
                                 weight: AppWeights.semiBold,

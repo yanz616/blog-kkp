@@ -53,6 +53,9 @@ class _MobileMyActivitiesPageState extends State<MobileMyActivitiesPage> {
             title: _activities[index].title,
             date: _activities[index].date,
 
+            author: '',
+            imageUrl: '',
+            avatar: '',
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

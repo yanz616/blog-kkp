@@ -65,7 +65,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                       return ActivitiesCard(
                         title: item.title,
                         author: item.author.username,
-                        date: item.createdAt!,
+                        date: item.createdAt.toString(),
                         avatar: item.author.avatar,
                         imageUrl: item.image,
                         onTap: () {
@@ -73,7 +73,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                      DesktopActivityDetailPage(post: item, user: item.author,),
+                                      DesktopActivityDetailPage(post: item),
                             ),
                           );
                         },

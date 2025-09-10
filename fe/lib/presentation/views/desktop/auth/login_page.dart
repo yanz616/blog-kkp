@@ -280,7 +280,7 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).pushReplacement(
+                                  Navigator.of(context).push(
                                     PageRouteBuilder(
                                       pageBuilder:
                                           (

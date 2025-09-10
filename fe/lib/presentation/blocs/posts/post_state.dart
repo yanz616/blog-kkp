@@ -29,7 +29,8 @@ class PostsLoaded extends PostState {
 
 class PostsSuccess extends PostState {
   final String message;
-  const PostsSuccess(this.message);
+  final PostModel data;
+  const PostsSuccess(this.message, this.data);
 }
 
 class PostsFailure extends PostState {

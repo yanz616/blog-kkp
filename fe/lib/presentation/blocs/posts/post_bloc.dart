@@ -56,7 +56,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       try {
         final response = await postRepository.createPost(event.postRequest);
         if (response is SuccessResponse<PostModel>) {
-          emit(PostsSuccess(response.message));
+          emit(PostsSuccess(response.message, response.data));
+          add(FetchPosts());
+          add(FetchMyPosts());
         } else if (response is ErrorResponse) {
           emit(PostsFailure(response.message));
         }
