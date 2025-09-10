@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:fe/core/constants/variabel.dart';
-// import 'package:fe/data/models/dummy/dummy_model.dart';
+import 'package:fe/core/utils/local_storage.dart';
 import 'package:fe/data/models/request/auth_request.dart';
 import 'package:fe/data/models/response/response_model.dart';
 import 'package:fe/data/models/user/user.dart';
@@ -23,10 +23,17 @@ class AuthRepository {
       final jsonData = jsonDecode(response.body);
 
       if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
-        return SuccessResponse<User>.fromJson(
+        final res = SuccessResponse<User>.fromJson(
           jsonData,
           (data) => User.fromJson(data),
         );
+        await LocalStorage.setString(res.data.token);
+        await LocalStorage.setId(res.data.id);
+        await LocalStorage.setUsername(res.data.username);
+        await LocalStorage.setEmail(res.data.email);
+        await LocalStorage.setAvatar(res.data.avatar ?? "");
+        await LocalStorage.setCreatedAt(res.data.createdAt);
+        return res;
       } else {
         return ErrorResponse.fromJson(jsonData);
         // return ErrorResponse(

@@ -38,7 +38,7 @@ class User {
       'avatar': avatar,
       'password': password,
       'token': token,
-      'created_at': createdAt,
+      'createdAt': createdAt,
     };
   }
 }

@@ -1,20 +1,27 @@
 class AuthorModel {
   final int id;
   final String username;
+  final String? email;
   final String? avatar;
 
-  const AuthorModel({required this.id, required this.username, this.avatar});
+  const AuthorModel({
+    required this.id,
+    required this.username,
+    this.avatar,
+    this.email,
+  });
 
   factory AuthorModel.fromJson(Map<String, dynamic> json) {
     return AuthorModel(
       id: json['id'],
       username: json['username'],
+      email: json['email'],
       avatar: json['avatar'],
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'username': username, 'avatar': avatar};
+    return {'id': id, 'username': username, 'email': email, 'avatar': avatar};
   }
 }
 

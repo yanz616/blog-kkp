@@ -15,9 +15,6 @@ class SuccessResponse<T> {
     Map<String, dynamic> json,
     T Function(dynamic) fromJsonT,
   ) {
-    if (json['statusCode'] == null) {
-      throw ArgumentError('Missing required field: statusCode');
-    }
     // if (json['data'] == null) {
     //   throw ArgumentError('Missing required field: data');
     // }
@@ -54,9 +51,9 @@ class ErrorResponse {
   });
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) {
-    if (json['statusCode'] == null) {
-      throw ArgumentError('Missing required field: statusCode');
-    }
+    // if (json['statusCode'] == null) {
+    //   throw ArgumentError('Missing required field: statusCode');
+    // }
 
     return ErrorResponse(
       success: json['success'] ?? false,
