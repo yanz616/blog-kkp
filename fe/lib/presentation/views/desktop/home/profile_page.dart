@@ -97,7 +97,9 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfilePage()),
+                    MaterialPageRoute(
+                      builder: (context) => EditProfilePage(userData: userData),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
