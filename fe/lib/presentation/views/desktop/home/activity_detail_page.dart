@@ -2,14 +2,13 @@ import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/data/helpers/date_time_helper.dart';
 import 'package:fe/data/models/posts/post_model.dart';
-import 'package:fe/data/models/user/user.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class DesktopActivityDetailPage extends StatelessWidget {
   final PostModel post;
-  final User? user;
+  final AuthorModel? user;
 
   const DesktopActivityDetailPage({super.key, required this.post, this.user});
 

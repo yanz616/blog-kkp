@@ -31,6 +31,7 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
 
   @override
   Widget build(BuildContext context) {
+    // context.read<PostBloc>().add(FetchMyPosts());
     return Column(
       children: [
         AppBar(

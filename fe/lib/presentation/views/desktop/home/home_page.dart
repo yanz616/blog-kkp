@@ -25,6 +25,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // context.read<PostBloc>().add(FetchPosts());
     return Column(
       children: [
         AppBar(
@@ -72,7 +73,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                             MaterialPageRoute(
                               builder:
                                   (context) =>
-                                      DesktopActivityDetailPage(post: item),
+                                      DesktopActivityDetailPage(post: item, user: item.author,),
                             ),
                           );
                         },

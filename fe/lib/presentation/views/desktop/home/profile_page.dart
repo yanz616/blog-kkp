@@ -1,11 +1,50 @@
 import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/core/utils/local_storage.dart';
+import 'package:fe/data/helpers/date_time_helper.dart';
+import 'package:fe/data/models/user/user.dart';
 import 'package:fe/presentation/views/desktop/home/edit_profile_page.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class DesktopProfilePage extends StatelessWidget {
+class DesktopProfilePage extends StatefulWidget {
   const DesktopProfilePage({super.key});
+
+  @override
+  State<DesktopProfilePage> createState() => _DesktopProfilePageState();
+}
+
+class _DesktopProfilePageState extends State<DesktopProfilePage> {
+  late User? userData;
+  Future<void> loadUserData() async {
+    final token = await LocalStorage.getString() ?? "";
+    final id = await LocalStorage.getId() ?? 0;
+    final username = await LocalStorage.getUsername() ?? "";
+    final email = await LocalStorage.getEmail() ?? "";
+    final avatar = await LocalStorage.getAvatar() ?? "";
+    final created = await LocalStorage.getCreated() ?? "";
+
+    if (!mounted) return;
+
+    setState(() {
+      userData = User(
+        id: id,
+        username: username,
+        email: email,
+        avatar: avatar,
+        token: token,
+        createdAt: created,
+      );
+    });
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadUserData();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +66,13 @@ class DesktopProfilePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const CircleAvatar(
+            CircleAvatar(
               radius: 70,
-              backgroundColor: AppColors.oldBlue,
-              child: Icon(Icons.person, size: 80, color: Colors.white),
+              backgroundImage: NetworkImage(userData!.avatar!),
             ),
             const Gap(24.0),
             PoppinText(
-              text: 'Nama Lengkap Peserta',
+              text: userData!.username,
               styles: StyleText(
                 size: 24,
                 weight: FontWeight.bold,
@@ -43,7 +81,13 @@ class DesktopProfilePage extends StatelessWidget {
             ),
             const Gap(8.0),
             PoppinText(
-              text: 'email.peserta@example.com',
+              text: userData!.email,
+              styles: StyleText(size: 16, color: AppColors.mediumGray),
+            ),
+            const Gap(8.0),
+            PoppinText(
+              text:
+                  "Bergabung pada : ${DateTimeHelper.formatLongDate(userData!.createdAt)}",
               styles: StyleText(size: 16, color: AppColors.mediumGray),
             ),
             const Gap(40),

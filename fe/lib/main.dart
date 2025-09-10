@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(scaffoldBackgroundColor: AppColors.youngGray),
         home: const ResponsiveLayout(
           mobileLayout: MobileMainScaffold(),
-          desktopLayout: DesktopMainScaffold(),
+          desktopLayout: DesktopLoginPage(),
         ),
       ),
     );
