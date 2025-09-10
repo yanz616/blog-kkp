@@ -2,10 +2,10 @@ import { Context } from "hono";
 import bcrypt from "bcryptjs";
 import { sign } from "hono/jwt";
 import { JWTPayload } from "hono/utils/jwt/types";
-import { AuthModel } from "../model/auth.model.js";
-import { ResFormmater } from "../lib/utils/response.js";
-import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "../lib/dto/auth.js";
-import { UserModel } from "../model/users.model.js";
+import { AuthModel } from "../model/auth.model";
+import { ResFormmater } from "../lib/utils/response";
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from "../lib/dto/auth";
+import { UserModel } from "../model/users.model";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 export class AuthController {
@@ -22,7 +22,8 @@ export class AuthController {
 
             if (password.length < 6) return c.json(ResFormmater.failed("Password minimal 6 karakter"), 400);
             const hashPw = await bcrypt.hash(password, 10)
-            const user = await AuthModel.register(username, email, hashPw);
+            const defaultAvatar = "https://avatar.iran.liara.run/public";
+            const user = await AuthModel.register(username, email, hashPw, defaultAvatar);
             const response: RegisterResponse = {
                 id: user.id,
                 username: user.username,
@@ -66,7 +67,7 @@ export class AuthController {
                 avatar: user.avatar ?? "",
                 email: user.email,
                 token: token,
-                createdAt: String(user.createdAt),
+                createdAt: user.createdAt!,
             }
             return c.json(ResFormmater.success(response, "Login berhasil"), 200);
         } catch (err) {

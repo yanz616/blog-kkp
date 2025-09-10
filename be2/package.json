@@ -7,7 +7,9 @@
     "devh": "bun run --hot --host src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "bun run ./src/database/seed.ts"
+    "db:seed": "bun run ./src/database/seed.ts",
+    "build": "tsc",                
+    "start": "node dist/index.js" 
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.5.2",

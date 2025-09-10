@@ -4,7 +4,10 @@ import postgres from "postgres";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const client = postgres(process.env.DATABASE_URL!);
+const client = postgres(process.env.DATABASE_URL!, {
+    ssl: "require",
+    max: 1,
+});
 const db = drizzle(client);
 
 const supabase = createClient(
