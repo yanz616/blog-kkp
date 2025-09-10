@@ -11,7 +11,7 @@ interface LoginResponse {
     email: string;
     token: string;
     avatar: string;
-    createdAt: string;
+    createdAt: Date;
 }
 
 interface LoginRequest {

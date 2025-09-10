@@ -9,7 +9,6 @@ interface UpdateCommentsRequest {
     id: number;
     content: string;
     authorId: number;
-    postId: number;
 }
 
 interface UpdateCommentPayload {

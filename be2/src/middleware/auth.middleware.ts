@@ -10,7 +10,7 @@ export const AuthMiddleware: MiddlewareHandler = async (c, next) => {
         const payload = await verify(token, JWT_SECRET!);
         c.set("user", payload);
         await next();
-    } catch (err : any) {
+    } catch (err: any) {
         return c.json({ success: false, message: "Invalid or expired token" + err.message }, 401);
     }
 };

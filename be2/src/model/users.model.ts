@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
-import { db } from "../database/index.js";
-import { users } from "../database/schema.js";
-import { UpdateUsersRequest } from "../lib/dto/users.js";
+import { desc, eq } from "drizzle-orm";
+import { db } from "../database/index";
+import { users } from "../database/schema";
+import { UpdateUsersRequest } from "../lib/dto/users";
 
 export class UserModel {
     static async create(username: string, email: string, password: string, avatar?: string) {
@@ -22,6 +22,11 @@ export class UserModel {
             updatedAt: new Date(),
         }).where(eq(users.id, id)).returning();
         return result[0] || null;
+    }
+
+    static async findAll() {
+        const result = await db.select().from(users).orderBy(desc(users.createdAt))
+        return result;
     }
 
     static async findByEmail(email: string) {

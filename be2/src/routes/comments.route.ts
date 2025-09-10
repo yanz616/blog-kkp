@@ -1,14 +1,14 @@
 import { Hono } from "hono";
-import { AuthMiddleware } from "../middleware/auth.middleware.js";
-import { CommentsController } from "../controllers/comments.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware";
+import { CommentsController } from "../controllers/comments.controller";
 
-const app = new Hono()
-    // .get("/comments", PostsController.getAll)
-    .get("/comments/:id", CommentsController.getByPost)
+const comments = new Hono().basePath("/v1")
+    .get("/comments", CommentsController.getAll)
+    .get("/:id/comments", CommentsController.getByPost)
+    .get("/comments/:id", CommentsController.getById)
     .use("*", AuthMiddleware)
     .post("/comments", CommentsController.create)
-// .put("/posts/:id", PostsController.update)
-// .delete("/posts/:id", PostsController.delete)
+    .put("/comments/:id", CommentsController.update)
+    .delete("/comments/:id", CommentsController.delete)
 
-const comments = new Hono().route("/v1", app)
 export default comments

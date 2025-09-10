@@ -1,5 +1,5 @@
-import { SupabaseUpload } from "./index.js";
-import { UploadResponse } from "./type.js";
+import { SupabaseUpload } from "./index";
+import { UploadResponse } from "./type";
 
 export class AssetActions {
     static async UploadUserAvatar(buffer: Buffer): Promise<UploadResponse> {

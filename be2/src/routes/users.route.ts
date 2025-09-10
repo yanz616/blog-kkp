@@ -1,13 +1,11 @@
 import { Hono } from "hono";
-import { AuthMiddleware } from "../middleware/auth.middleware.js";
-import { UserController } from "../controllers/users.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware";
+import { UserController } from "../controllers/users.controller";
 
-const app = new Hono()
-    // .get("/posts", PostsController.getAll)
+const users = new Hono().basePath("/v1")
+    .get("/users", UserController.getAll)
     .get("/users/:id", UserController.getById)
-    .use("*", AuthMiddleware)
-    .put("/users/:id", UserController.update)
-    .delete("/users/:id", UserController.delete)
+    .put("/users/:id", AuthMiddleware, UserController.update)
+    // .delete("/users/:id", AuthMiddleware, UserController.delete)
 
-const users = new Hono().route("/v1", app)
 export default users

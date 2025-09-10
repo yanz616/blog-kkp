@@ -1,11 +1,11 @@
 import { Context } from "hono";
-import { ResFormmater } from "../lib/utils/response.js";
-import { UserModel } from "../model/users.model.js";
-import { UploadResponse } from "../database/supabase/type.js";
-import { SupabaseDelete } from "../database/supabase/index.js";
-import { AssetActions } from "../database/supabase/upload.js";
-import { UpdateUsersRequest } from "../lib/dto/users.js";
-import { UserPayloadData } from "../lib/dto/auth.js";
+import { ResFormmater } from "../lib/utils/response";
+import { UserModel } from "../model/users.model";
+import { UploadResponse } from "../database/supabase/type";
+import { SupabaseDelete } from "../database/supabase/index";
+import { AssetActions } from "../database/supabase/upload";
+import { UpdateUsersRequest } from "../lib/dto/users";
+import { UserPayloadData } from "../lib/dto/auth";
 
 export class UserController {
     static async update(c: Context) {
@@ -40,6 +40,16 @@ export class UserController {
 
             return c.json(ResFormmater.success(user, "Berhasil Mengupdate User", 200), 200);
         } catch (err) {
+            return c.json(ResFormmater.failed("Server Error" + err, 500), 500);
+        }
+    }
+
+    static async getAll(c: Context) {
+        try {
+            const response = await UserModel.findAll();
+            if (!response) return c.json(ResFormmater.success([], "User tidak ditemukan", 200), 200);
+            return c.json(ResFormmater.success(response, "Berhasil mendapatkan user berdasarkan id"), 200);
+        } catch (err: any) {
             return c.json(ResFormmater.failed("Server Error" + err, 500), 500);
         }
     }
