@@ -25,69 +25,65 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AppBar(
-          title: PoppinText(
-            text: 'Kegiatan Magang',
-            styles: StyleText(
-              weight: AppWeights.bold,
-              color: AppColors.darkGray,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: PoppinText(
+          text: 'Kegiatan Magang',
+          styles: StyleText(
+            size: 24,
+            weight: AppWeights.bold,
+            color: AppColors.darkGray,
           ),
-          backgroundColor: AppColors.lightBlue,
-          elevation: 0,
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: BlocBuilder<PostBloc, PostState>(
-              builder: (context, state) {
-                if (state is PostsLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is PostsLoaded) {
-                  final posts = state.allPosts;
-                  if (posts.isEmpty) {
-                    return const Center(child: Text("Postingan masih kosong"));
-                  }
-                  return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.9,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 18.0,
+        // backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: BlocBuilder<PostBloc, PostState>(
+          builder: (context, state) {
+            if (state is PostsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is PostsLoaded) {
+              final posts = state.allPosts;
+              if (posts.isEmpty) {
+                return const Center(child: Text("Postingan masih kosong"));
+              }
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 350,
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 24.0,
+                  mainAxisSpacing: 24.0,
+                ),
+                itemCount: posts.length,
+                itemBuilder: (context, index) {
+                  final item = posts[index];
+                  return ActivitiesCard(
+                    title: item.title,
+                    author: item.author!.username,
+                    date: item.createdAt.toString(),
+                    avatar: item.author!.avatar,
+                    imageUrl: item.image,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DesktopActivityDetailPage(post: item),
                         ),
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      final item = posts[index];
-                      return ActivitiesCard(
-                        title: item.title,
-                        author: item.author!.username,
-                        date: item.createdAt.toString(),
-                        avatar: item.author!.avatar,
-                        imageUrl: item.image,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DesktopActivityDetailPage(post: item),
-                            ),
-                          );
-                        },
                       );
                     },
                   );
-                } else if (state is PostsFailure) {
-                  return Center(child: Text(state.message));
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
-          ),
+                },
+              );
+            } else if (state is PostsFailure) {
+              return Center(child: Text(state.message));
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
         ),
-      ],
+      ),
     );
   }
 }

@@ -120,6 +120,7 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
           }
           return Center(
             child: Container(
+              margin: EdgeInsets.symmetric(vertical: 16),
               width: 900, // Lebar kontainer untuk desktop/tablet
               decoration: BoxDecoration(
                 color: AppColors.white,
@@ -128,7 +129,7 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 10,
-                    offset: const Offset(0, 5),
+                    offset: const Offset(2, 5),
                   ),
                 ],
               ),

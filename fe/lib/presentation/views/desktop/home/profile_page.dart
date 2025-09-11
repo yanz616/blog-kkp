@@ -16,6 +16,7 @@ class DesktopProfilePage extends StatefulWidget {
 
 class _DesktopProfilePageState extends State<DesktopProfilePage> {
   User? userData;
+
   Future<void> loadUserData() async {
     final token = await LocalStorage.getString() ?? "";
     final id = await LocalStorage.getId() ?? 0;
@@ -51,70 +52,112 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
     if (userData == null) {
       return const Center(child: CircularProgressIndicator());
     }
+
     return Center(
       child: Container(
         width: 500,
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(32.0),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(16.0),
+          borderRadius: BorderRadius.circular(20.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            CircleAvatar(
-              radius: 70,
-              backgroundImage: NetworkImage(userData!.avatar.toString()),
+            // Avatar dengan border gradient tipis
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(
+                  colors: [AppColors.lightBlue, Color(0xFF50E3C2)],
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage: NetworkImage(userData!.avatar.toString()),
+              ),
             ),
-            const Gap(24.0),
+
+            const Gap(28.0),
+
+            // Username
             PoppinText(
               text: userData!.username,
               styles: StyleText(
-                size: 24,
+                size: 26,
                 weight: FontWeight.bold,
                 color: AppColors.darkGray,
               ),
             ),
-            const Gap(8.0),
+
+            const Gap(10.0),
+
+            // Email
             PoppinText(
               text: userData!.email,
-              styles: StyleText(size: 16, color: AppColors.mediumGray),
+              styles: StyleText(
+                size: 16,
+                color: AppColors.mediumGray,
+              ),
             ),
-            const Gap(8.0),
+
+            const Gap(6.0),
+
+            // Tanggal join
             PoppinText(
               text:
-                  "Bergabung pada : ${DateTimeHelper.formatLongDate(userData?.createdAt)}",
-              styles: StyleText(size: 16, color: AppColors.mediumGray),
+                  "Bergabung pada: ${DateTimeHelper.formatLongDate(userData?.createdAt)}",
+              styles: StyleText(
+                size: 14,
+                color: AppColors.mediumGray,
+              ),
             ),
+
             const Gap(40),
+
+            // Tombol Edit Profil
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditProfilePage(userData: userData),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EditProfilePage(userData: userData),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.lightBlue,
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.0),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.lightBlue,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+                  ).copyWith(
+                    overlayColor: WidgetStateProperty.all(
+                      AppColors.lightBlue.withOpacity(0.85),
+                    ),
                   ),
-                ),
-                child: PoppinText(
-                  text: 'Edit Profil',
-                  styles: StyleText(size: 18, color: AppColors.white),
+                  child: PoppinText(
+                    text: 'Edit Profil',
+                    styles: StyleText(
+                      size: 18,
+                      color: AppColors.white,
+                      weight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ),

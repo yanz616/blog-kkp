@@ -40,17 +40,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await ImagePicker().pickImage(
-  //     source: ImageSource.gallery,
-  //   );
-  //   if (pickedFile != null) {
-  //     final bytes = await P
-  //     setState(() {
-  //       _selectedAvatar = pickedFile; // langsung aja
-  //     });
-  //   }
-  // }
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
@@ -74,13 +63,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            color: AppColors.white,
-            fontWeight: AppWeights.semiBold,
-          ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 16, left: 12),
+        child: FloatingActionButton(
+          backgroundColor: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+          child: Icon(Icons.arrow_back),
         ),
       ),
       body: Center(
@@ -89,12 +78,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           padding: const EdgeInsets.all(32.0),
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -125,128 +114,136 @@ class _EditProfilePageState extends State<EditProfilePage> {
             builder: (context, state) {
               return SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Bagian Foto Profil
-                    Center(
-                      child: GestureDetector(
-                        onTap: _pickImage,
-                        child: Stack(
-                          children: [
-                            ClipOval(
-                              child: _avatarBytes != null
-                                  ? Image.memory(
-                                      _avatarBytes!,
-                                      height: 140,
-                                      width: 140,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : (widget.userData?.avatar != null &&
+                    // Foto profil (rounded avatar)
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 70,
+                            backgroundImage:
+                                _avatarBytes != null
+                                    ? MemoryImage(_avatarBytes!)
+                                    : (widget.userData?.avatar != null &&
                                         widget.userData!.avatar!.isNotEmpty)
-                                  ? Image.network(
-                                      widget.userData!.avatar!,
-                                      height: 140,
-                                      width: 140,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Icon(
+                                    ? NetworkImage(widget.userData!.avatar!)
+                                    : null,
+                            backgroundColor: AppColors.youngGray,
+                            child:
+                                (widget.userData?.avatar == null ||
+                                            widget.userData!.avatar!.isEmpty) &&
+                                        _avatarBytes == null
+                                    ? const Icon(
                                       Icons.person,
-                                      size: 70,
+                                      size: 60,
                                       color: AppColors.mediumGray,
-                                    ),
-                            ),
-                            const Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: AppColors.lightBlue,
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: AppColors.white,
-                                  size: 20,
-                                ),
+                                    )
+                                    : null,
+                          ),
+                          const Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: AppColors.lightBlue,
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: AppColors.white,
+                                size: 20,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    const Gap(32),
 
-                    // Judul Bagian: Informasi Akun
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
-                      child: Text(
-                        'Informasi Akun',
-                        style: TextStyle(
+                    const Gap(40),
+
+                    // Judul section
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: PoppinText(
+                        text: "Informasi Akun",
+                        styles: StyleText(
+                          size: 18,
+                          weight: AppWeights.bold,
                           color: AppColors.darkGray,
-                          fontSize: 18,
-                          fontWeight: AppWeights.bold,
                         ),
                       ),
                     ),
-                    // FormField Nama Lengkap
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: TextField(
-                        controller: _usernameController,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          labelStyle: const TextStyle(
-                            color: AppColors.mediumGray,
-                            fontWeight: AppWeights.regular,
-                          ),
-                          filled: true,
-                          fillColor: AppColors.youngGray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none,
-                          ),
+                    const Gap(16),
+
+                    // Input Username
+                    TextField(
+                      controller: _usernameController,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+
+                    // Input Email (readonly)
+                    TextField(
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text: widget.userData!.email,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
 
-                    const Gap(24),
-                    // FormField Email
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: TextField(
-                        readOnly: true,
-                        controller: TextEditingController(
-                          text: widget.userData!.email,
-                        ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.youngGray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Tombol Simpan
+                    const Gap(40),
+
+                    // Tombol simpan
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
+                      height: 54,
                       child: ElevatedButton(
                         onPressed: state is AuthLoading ? null : _submit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.lightBlue,
+                          elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: state is AuthLoading
-                            ? CircularProgressIndicator(color: AppColors.white)
-                            : PoppinText(
-                                text: 'Simpan Perubahan',
-                                styles: StyleText(
+                        child:
+                            state is AuthLoading
+                                ? const CircularProgressIndicator(
                                   color: AppColors.white,
-                                  size: 18,
+                                )
+                                : PoppinText(
+                                  text: 'Simpan Perubahan',
+                                  styles: StyleText(
+                                    color: AppColors.white,
+                                    size: 18,
+                                    weight: AppWeights.semiBold,
+                                  ),
                                 ),
-                              ),
                       ),
                     ),
                   ],
