@@ -5,7 +5,6 @@ import 'package:fe/data/models/user/user.dart';
 import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
-import 'package:fe/presentation/views/desktop/home/profile_page.dart';
 import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/foundation.dart';

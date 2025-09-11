@@ -91,22 +91,24 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
                 _buildNavItem(index: 2, icon: Icons.person, label: 'Profil'),
                 const Spacer(),
                 InkWell(
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.clear();
+                  onTap:
+                      //alert dialog
+                      () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.clear();
 
-                    if (!mounted) return;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const DesktopLoginPage(),
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
-                    });
-                  },
+                        if (!mounted) return;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const DesktopLoginPage(),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
+                        });
+                      },
                   child: const ListTile(
                     leading: Icon(Icons.logout, color: Colors.white),
                     title: Text(
