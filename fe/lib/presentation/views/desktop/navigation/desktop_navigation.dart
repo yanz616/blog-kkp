@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DesktopMainScaffold extends StatefulWidget {
   const DesktopMainScaffold({super.key, this.index});
-  final int? index; // nullable
+  final int? index;
 
   @override
   State<DesktopMainScaffold> createState() => _DesktopMainScaffoldState();
@@ -28,7 +28,6 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
   @override
   void initState() {
     super.initState();
-    // kalau widget.index null → fallback ke 0
     _selectedIndex = widget.index ?? 0;
   }
 
@@ -39,24 +38,35 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
   }) {
     final bool isSelected = _selectedIndex == index;
 
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? AppColors.lightBlue : AppColors.white,
-      ),
-      title: PoppinText(
-        text: label,
-        styles: StyleText(
-          color: isSelected ? AppColors.lightBlue : AppColors.white,
+    return InkWell(
+      onTap: () => setState(() => _selectedIndex = index),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white.withOpacity(0.15) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? Colors.white : Colors.white70,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: PoppinText(
+                text: label,
+                styles: StyleText(
+                  color: isSelected ? Colors.white : Colors.white70,
+                  weight: isSelected ? AppWeights.semiBold : AppWeights.regular,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      selected: isSelected,
-      selectedTileColor: AppColors.white,
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
     );
   }
 
@@ -65,23 +75,39 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
     return Scaffold(
       body: Row(
         children: [
-          // Sidebar
+          // Sidebar elegan
           Container(
             width: 250,
-            color: AppColors.oldBlue,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.oldBlue, AppColors.lightBlue],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 12,
+                  offset: const Offset(2, 0),
+                ),
+              ],
+            ),
             child: Column(
               children: [
+                // Header
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  padding: const EdgeInsets.symmetric(vertical: 32),
                   child: PoppinText(
                     text: 'IKP Magang Blog',
                     styles: StyleText(
-                      color: AppColors.white,
-                      size: 24,
+                      color: Colors.white,
+                      size: 22,
                       weight: AppWeights.bold,
                     ),
                   ),
                 ),
+
+                // Nav Items
                 _buildNavItem(index: 0, icon: Icons.home, label: 'Beranda'),
                 _buildNavItem(
                   index: 1,
@@ -89,37 +115,53 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
                   label: 'Kegiatanku',
                 ),
                 _buildNavItem(index: 2, icon: Icons.person, label: 'Profil'),
-                const Spacer(),
-                InkWell(
-                  onTap:
-                      //alert dialog
-                      () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.clear();
 
-                        if (!mounted) return;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const DesktopLoginPage(),
-                            ),
-                            (Route<dynamic> route) => false,
-                          );
-                        });
-                      },
-                  child: const ListTile(
-                    leading: Icon(Icons.logout, color: Colors.white),
-                    title: Text(
-                      'Keluar',
-                      style: TextStyle(color: Colors.white),
+                const Spacer(),
+
+                const Divider(color: Colors.white30, indent: 12, endIndent: 12),
+
+                // Logout
+                InkWell(
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.clear();
+
+                    if (!mounted) return;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              const DesktopLoginPage(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.logout, color: Colors.white70),
+                        SizedBox(width: 12),
+                        Text(
+                          'Keluar',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
           ),
+
           // Konten utama
           Expanded(
             child: IndexedStack(index: _selectedIndex, children: _pages),

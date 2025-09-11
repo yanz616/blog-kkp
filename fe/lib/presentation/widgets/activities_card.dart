@@ -4,7 +4,7 @@ import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class ActivitiesCard extends StatelessWidget {
+class ActivitiesCard extends StatefulWidget {
   final String title;
   final String author;
   final String? date;
@@ -23,66 +23,131 @@ class ActivitiesCard extends StatelessWidget {
   });
 
   @override
+  State<ActivitiesCard> createState() => _ActivitiesCardState();
+}
+
+class _ActivitiesCardState extends State<ActivitiesCard> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 2,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: AppColors.lightGray,
-                  borderRadius: BorderRadius.circular(8),
-                  image: imageUrl != null
-                      ? DecorationImage(
-                          image: NetworkImage(imageUrl!.trim()),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                ),
-                child: imageUrl == null
-                    ? const Center(
-                        child: Icon(
-                          Icons.photo_library,
-                          size: 50,
-                          color: AppColors.mediumGray,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        transform: Matrix4.identity()..scale(_isHovered ? 1.03 : 1.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          clipBehavior: Clip.antiAlias,
+          elevation: _isHovered ? 12 : 4,
+          shadowColor: Colors.black.withOpacity(0.15),
+          child: InkWell(
+            onTap: widget.onTap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Gambar dengan overlay gradient
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.lightGray,
+                          image:
+                              widget.imageUrl != null
+                                  ? DecorationImage(
+                                    image: NetworkImage(
+                                      widget.imageUrl!.trim(),
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                  : null,
                         ),
-                      )
-                    : null,
-              ),
-              const Gap(12),
-              PoppinText(
-                text: title,
-                styles: StyleText(
-                  size: 18,
-                  weight: FontWeight.bold,
-                  color: AppColors.darkGray,
-                ),
-              ),
-              const Gap(4),
-              Row(
-                children: [
-                  CircleAvatar(backgroundImage: NetworkImage(avatar!)),
-                  const Gap(4),
-                  PoppinText(
-                    text: author,
-                    styles: StyleText(size: 14, color: AppColors.mediumGray),
+                        child:
+                            widget.imageUrl == null
+                                ? const Center(
+                                  child: Icon(
+                                    Icons.photo_library_outlined,
+                                    size: 60,
+                                    color: AppColors.mediumGray,
+                                  ),
+                                )
+                                : null,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.6),
+                              Colors.transparent,
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 12,
+                        left: 12,
+                        right: 12,
+                        child: PoppinText(
+                          text: widget.title,
+                          styles: StyleText(
+                            size: 18,
+                            weight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const Gap(4),
-              PoppinText(
-                text: DateTimeHelper.formatLongDate(date!),
-                styles: StyleText(color: AppColors.mediumGray),
-              ),
-            ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundImage: NetworkImage(widget.avatar!),
+                      ),
+                      const Gap(10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PoppinText(
+                              text: widget.author,
+                              styles: StyleText(
+                                size: 14,
+                                weight: FontWeight.w600,
+                                color: AppColors.darkGray,
+                              ),
+                            ),
+                            const Gap(2),
+                            PoppinText(
+                              text: DateTimeHelper.formatLongDate(widget.date!),
+                              styles: StyleText(
+                                size: 12,
+                                color: AppColors.mediumGray,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
