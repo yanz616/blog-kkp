@@ -1,6 +1,8 @@
 import 'package:fe/core/constants/app_colors.dart';
+import 'package:fe/data/repositories/admin/admin_repository.dart';
 import 'package:fe/data/repositories/auth_repository.dart';
 import 'package:fe/data/repositories/post_repository.dart';
+import 'package:fe/presentation/blocs/admin/admin_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/posts/post_bloc.dart';
 import 'package:fe/presentation/layouts/rensponsive_layout.dart';
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => AuthBloc(AuthRepository())),
         BlocProvider(create: (_) => PostBloc(PostRepository())),
+        BlocProvider(create: (_) => AdminBloc(AdminRepository())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

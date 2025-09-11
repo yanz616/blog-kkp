@@ -23,7 +23,7 @@ class AuthRepository {
 
       final jsonData = jsonDecode(response.body);
 
-      if (jsonData['statusCode'] == 200 && jsonData['success'] == true) {
+      if (response.statusCode == 200) {
         final res = SuccessResponse<User>.fromJson(
           jsonData,
           (data) => User.fromJson(data),

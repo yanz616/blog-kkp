@@ -66,6 +66,11 @@ class LocalStorage {
     return prefs.getString('created');
   }
 
+  static Future<bool?> getIsAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isAdmin');
+  }
+
   static Future<void> removeId() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('id');
@@ -89,5 +94,10 @@ class LocalStorage {
   static Future<void> removeCreated() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('created');
+  }
+
+  static Future<void> removeIsAdmin() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('isAdmin');
   }
 }

@@ -8,6 +8,7 @@ class User {
   final String? password;
   final String? token;
   final String? createdAt;
+  final bool isAdmin;
 
   User({
     required this.id,
@@ -17,6 +18,7 @@ class User {
     this.password,
     this.token,
     required this.createdAt,
+    required this.isAdmin,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class User {
       avatar: json['avatar'],
       token: json['token'],
       createdAt: json['createdAt']?.toString(),
+      isAdmin: json['isAdmin'] ?? false,
     );
   }
 
@@ -43,6 +46,7 @@ class User {
       'password': password,
       'token': token,
       if (createdAt != null) 'createdAt': createdAt,
+      'isAdmin': isAdmin,
     };
   }
 }
