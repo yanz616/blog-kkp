@@ -9,20 +9,28 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DesktopMainScaffold extends StatefulWidget {
-  const DesktopMainScaffold({super.key});
+  const DesktopMainScaffold({super.key, this.index});
+  final int? index; // nullable
 
   @override
   State<DesktopMainScaffold> createState() => _DesktopMainScaffoldState();
 }
 
 class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final List<Widget> _pages = const [
     DesktopHomePage(),
     DesktopMyActivitiesPage(),
     DesktopProfilePage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // kalau widget.index null → fallback ke 0
+    _selectedIndex = widget.index ?? 0;
+  }
 
   Widget _buildNavItem({
     required int index,
@@ -57,6 +65,7 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
     return Scaffold(
       body: Row(
         children: [
+          // Sidebar
           Container(
             width: 250,
             color: AppColors.oldBlue,
@@ -82,21 +91,24 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
                 _buildNavItem(index: 2, icon: Icons.person, label: 'Profil'),
                 const Spacer(),
                 InkWell(
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.clear();
+                  onTap:
+                      //alert dialog
+                      () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.clear();
 
-                    if (!mounted) return;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => DesktopLoginPage(),
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
-                    });
-                  },
+                        if (!mounted) return;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const DesktopLoginPage(),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
+                        });
+                      },
                   child: const ListTile(
                     leading: Icon(Icons.logout, color: Colors.white),
                     title: Text(
@@ -108,7 +120,7 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
               ],
             ),
           ),
-          // Konten Utama
+          // Konten utama
           Expanded(
             child: IndexedStack(index: _selectedIndex, children: _pages),
           ),

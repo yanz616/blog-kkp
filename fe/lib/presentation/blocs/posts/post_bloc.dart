@@ -29,7 +29,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
         );
       }
     });
-
     on<FetchMyPosts>((event, emit) async {
       emit(const PostsLoading());
       try {
@@ -56,12 +55,50 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       try {
         final response = await postRepository.createPost(event.postRequest);
         if (response is SuccessResponse<PostModel>) {
-          emit(PostsSuccess(response.message));
+          emit(PostsSuccess(response.message, response.data));
+          add(FetchPosts());
+          add(FetchMyPosts());
         } else if (response is ErrorResponse) {
           emit(PostsFailure(response.message));
         }
       } catch (e) {
         emit(const PostsFailure("Terjadi kesalahan saat membuat post."));
+      }
+    });
+
+    on<UpdatePost>((event, emit) async {
+      emit(const PostsLoading());
+      try {
+        final response = await postRepository.updatePost(
+          event.postRequest,
+          event.id,
+        );
+
+        if (response is SuccessResponse<PostModel>) {
+          emit(PostsSuccess(response.message, response.data));
+          add(FetchPosts());
+          add(FetchMyPosts());
+        } else if (response is ErrorResponse) {
+          emit(PostsFailure(response.message));
+        }
+      } catch (e) {
+        emit(PostsFailure("Terjadi Kesalahan $e"));
+      }
+    });
+
+    on<DeletePost>((event, emit) async {
+      emit(const PostsLoading());
+      try {
+        final response = await postRepository.deletePost(event.id);
+        if (response is SuccessResponse) {
+          emit(PostDeleteSuccess(response.message));
+          add(FetchMyPosts());
+          add(FetchPosts());
+        } else if (response is ErrorResponse) {
+          emit(PostsFailure(response.message));
+        }
+      } catch (e) {
+        emit(PostsFailure("Terjadi Kesalahan $e"));
       }
     });
   }

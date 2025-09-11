@@ -1,11 +1,20 @@
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
+import 'package:fe/data/models/posts/post_model.dart';
+import 'package:fe/data/models/request/post_request.dart';
+import 'package:fe/presentation/blocs/posts/post_bloc.dart';
+import 'package:fe/presentation/blocs/posts/post_event.dart';
+import 'package:fe/presentation/blocs/posts/post_state.dart';
+import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 
 class DesktopEditActivityPage extends StatefulWidget {
-  const DesktopEditActivityPage({super.key});
+  const DesktopEditActivityPage({super.key, required this.postData});
+  final PostModel postData;
 
   @override
   State<DesktopEditActivityPage> createState() =>
@@ -14,22 +23,44 @@ class DesktopEditActivityPage extends StatefulWidget {
 
 class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
   late TextEditingController _titleController;
-  late TextEditingController _descController;
+  late TextEditingController _contentController;
+  XFile? _selectedImage;
 
   @override
   void initState() {
     _titleController = TextEditingController(
-      text: "Judul Awal",
+      text: widget.postData.title,
     ); // bisa prefill dari data
-    _descController = TextEditingController(text: "Deskripsi awal kegiatan");
+    _contentController = TextEditingController(text: widget.postData.content);
     super.initState();
   }
 
   @override
   void dispose() {
     _titleController.dispose();
-    _descController.dispose();
+    _contentController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = pickedFile; // langsung aja
+      });
+    }
+  }
+
+  void _submit() {
+    final request = PostRequest(
+      title: _titleController.text.trim(),
+      content: _contentController.text.trim(),
+      image: _selectedImage, // kalau null berarti user tidak pilih foto baru
+    );
+
+    context.read<PostBloc>().add(UpdatePost(request, id: widget.postData.id));
   }
 
   @override
@@ -50,92 +81,160 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
               ),
             ],
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                // Judul Halaman
-                PoppinText(
-                  text: 'Edit Kegiatan',
-                  styles: StyleText(
-                    size: 28,
-                    weight: AppWeights.bold,
-                    color: AppColors.darkGray,
+          child: BlocConsumer<PostBloc, PostState>(
+            listener: (context, state) {
+              if (state is PostsSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: AppColors.linen,
+                    content: PoppinText(
+                      text: state.message,
+                      styles: StyleText(color: AppColors.ufoGreen),
+                    ),
                   ),
-                ),
-                const Gap(8.0),
-                PoppinText(
-                  text: 'Ubah detail kegiatan magang Anda',
-                  styles: StyleText(size: 16, color: AppColors.mediumGray),
-                ),
-                const Gap(48.0),
-                // Formulir Input
-                TextFormField(
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                    labelText: 'Judul Kegiatan',
-                    border: OutlineInputBorder(
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DesktopMainScaffold(index: 1),
+                  ),
+                );
+              } else if (state is PostsFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: AppColors.mutedRed,
+                    content: PoppinText(
+                      text: state.message,
+                      styles: StyleText(color: AppColors.crimson),
+                    ),
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    // Judul Halaman
+                    PoppinText(
+                      text: 'Edit Kegiatan',
+                      styles: StyleText(
+                        size: 28,
+                        weight: AppWeights.bold,
+                        color: AppColors.darkGray,
+                      ),
+                    ),
+                    const Gap(8.0),
+                    PoppinText(
+                      text: 'Ubah detail kegiatan magang Anda',
+                      styles: StyleText(size: 16, color: AppColors.mediumGray),
+                    ),
+                    const Gap(48.0),
+                    // Formulir Input
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        labelText: 'Judul Kegiatan',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    const Gap(16.0),
+                    TextFormField(
+                      controller: _contentController,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        labelText: 'Deskripsi',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    const Gap(24.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _pickImage,
+                        icon: const Icon(
+                          Icons.photo_library,
+                          color: AppColors.oldBlue,
+                        ),
+                        label: PoppinText(
+                          text: 'Ganti Foto',
+                          styles: StyleText(color: AppColors.oldBlue),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          side: const BorderSide(
+                            color: AppColors.oldBlue,
+                            width: 2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(24),
+
+                    //preview foto
+                    const Gap(16.0),
+                    ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
+                      child: _selectedImage != null
+                          ? Image.network(
+                              _selectedImage!.path, // foto baru
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            )
+                          : (widget.postData.image?.isNotEmpty ?? false)
+                          ? Image.network(
+                              widget.postData.image!, // foto lama
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              "assets/images/default.png", // default placeholder
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
                     ),
-                  ),
-                ),
-                const Gap(16.0),
-                TextFormField(
-                  controller: _descController,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    labelText: 'Deskripsi',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                ),
-                const Gap(24.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.photo_library,
-                      color: AppColors.oldBlue,
-                    ),
-                    label: PoppinText(
-                      text: 'Ganti Foto',
-                      styles: StyleText(color: AppColors.oldBlue),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      side: const BorderSide(
-                        color: AppColors.oldBlue,
-                        width: 2,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                ),
-                const Gap(24.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.lightBlue,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+
+                    const Gap(24.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: state is PostsLoading ? null : _submit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.lightBlue,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        child: state is PostsLoading
+                            ? const CircularProgressIndicator(
+                                color: AppColors.white,
+                              )
+                            : PoppinText(
+                                text: 'Simpan Perubahan',
+                                styles: StyleText(
+                                  color: AppColors.white,
+                                  size: 18,
+                                ),
+                              ),
                       ),
                     ),
-                    child: const Text(
-                      'Simpan Perubahan',
-                      style: TextStyle(color: AppColors.white, fontSize: 18),
-                    ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

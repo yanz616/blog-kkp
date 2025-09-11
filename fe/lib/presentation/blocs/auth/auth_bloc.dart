@@ -15,7 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final response = await repository.login(event.loginRequest);
       if (response is SuccessResponse) {
         final User data = response.data;
-        await LocalStorage.setString(data.token);
+        await LocalStorage.setString(data.token!);
         emit(AuthSuccess("${response.message} sebagai ${data.username}", data));
       } else if (response is ErrorResponse) {
         emit(AuthFailure(response.message));
@@ -28,6 +28,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (response is SuccessResponse) {
         final data = response.data;
         emit(AuthSuccess(response.message, data));
+      } else if (response is ErrorResponse) {
+        emit(AuthFailure(response.message));
+      }
+    });
+
+    on<UpdateUserEvent>((event, emit) async {
+      emit(AuthLoading());
+      final response = await repository.updateUser(
+        event.updateUserRequest,
+        event.id,
+      );
+      if (response is SuccessResponse) {
+        emit(UpdateSuccess(response.message));
       } else if (response is ErrorResponse) {
         emit(AuthFailure(response.message));
       }

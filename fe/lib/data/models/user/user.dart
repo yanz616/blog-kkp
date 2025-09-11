@@ -6,8 +6,8 @@ class User {
   final String email;
   final String? avatar;
   final String? password;
-  final String token;
-  final String createdAt;
+  final String? token;
+  final String? createdAt;
 
   User({
     required this.id,
@@ -15,18 +15,22 @@ class User {
     required this.email,
     this.avatar,
     this.password,
-    required this.token,
+    this.token,
     required this.createdAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    // if (json['avatar'] == null) {
+    //   json['avatar'] = "https://www.gstatic.com/webp/gallery/4.sm.webp";
+    // }
+
     return User(
       id: json['id'],
       username: json['username'],
       email: json['email'],
       avatar: json['avatar'],
       token: json['token'],
-      createdAt: json['createdAt'],
+      createdAt: json['createdAt']?.toString(),
     );
   }
 
@@ -38,7 +42,7 @@ class User {
       'avatar': avatar,
       'password': password,
       'token': token,
-      'createdAt': createdAt,
+      if (createdAt != null) 'createdAt': createdAt,
     };
   }
 }

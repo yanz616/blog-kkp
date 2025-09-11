@@ -9,6 +9,8 @@ class MyActivityCard extends StatelessWidget {
   final String title;
   final String date;
   final String? imageUrl;
+  final String author;
+  final String? avatar;
   final VoidCallback onTap;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -18,6 +20,8 @@ class MyActivityCard extends StatelessWidget {
     required this.title,
     required this.date,
     this.imageUrl,
+    required this.author,
+    this.avatar,
     required this.onTap,
     required this.onEdit,
     required this.onDelete,

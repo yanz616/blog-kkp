@@ -91,20 +91,21 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                         title: items.title,
                         date: items.createdAt!,
                         imageUrl: items.image,
+                        avatar: items.author!.avatar,
+                        author: items.author!.username,
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      DesktopActivityDetailPage(post: items),
+                              builder: (context) =>
+                                  DesktopActivityDetailPage(post: items),
                             ),
                           );
                         },
                         onEdit: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder:
-                                  (context) => const DesktopEditActivityPage(),
+                              builder: (context) =>
+                                  DesktopEditActivityPage(postData: items),
                             ),
                           );
                         },
@@ -124,8 +125,8 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                                 ),
                                 actions: <Widget>[
                                   TextButton(
-                                    onPressed:
-                                        () => Navigator.of(dialogContext).pop(),
+                                    onPressed: () =>
+                                        Navigator.of(dialogContext).pop(),
                                     child: PoppinText(
                                       text: 'Batal',
                                       styles: StyleText(),
@@ -134,7 +135,10 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                                   TextButton(
                                     onPressed: () {
                                       // spanggil event DeletePost
-                                      Navigator.of(dialogContext).pop();
+                                      context.read<PostBloc>().add(
+                                        DeletePost(items.id),
+                                      );
+                                      Navigator.pop(context);
                                     },
                                     child: PoppinText(
                                       text: 'Hapus',

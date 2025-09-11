@@ -15,7 +15,7 @@ class DesktopProfilePage extends StatefulWidget {
 }
 
 class _DesktopProfilePageState extends State<DesktopProfilePage> {
-  late User? userData;
+  User? userData;
   Future<void> loadUserData() async {
     final token = await LocalStorage.getString() ?? "";
     final id = await LocalStorage.getId() ?? 0;
@@ -48,6 +48,9 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (userData == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return Center(
       child: Container(
         width: 500,
@@ -68,7 +71,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
           children: <Widget>[
             CircleAvatar(
               radius: 70,
-              backgroundImage: NetworkImage(userData!.avatar!),
+              backgroundImage: NetworkImage(userData!.avatar.toString()),
             ),
             const Gap(24.0),
             PoppinText(
@@ -87,7 +90,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
             const Gap(8.0),
             PoppinText(
               text:
-                  "Bergabung pada : ${DateTimeHelper.formatLongDate(userData!.createdAt)}",
+                  "Bergabung pada : ${DateTimeHelper.formatLongDate(userData?.createdAt)}",
               styles: StyleText(size: 16, color: AppColors.mediumGray),
             ),
             const Gap(40),

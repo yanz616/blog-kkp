@@ -14,6 +14,12 @@ class AuthSuccess extends AuthState {
   AuthSuccess(this.message, this.user);
 }
 
+class UpdateSuccess extends AuthState {
+  final String message;
+
+  UpdateSuccess(this.message);
+}
+
 class AuthFailure extends AuthState {
   final String message;
   final bool success = false;

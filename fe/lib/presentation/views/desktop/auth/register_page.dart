@@ -5,6 +5,7 @@ import 'package:fe/main.dart';
 import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/auth/auth_event.dart';
 import 'package:fe/presentation/blocs/auth/auth_state.dart';
+import 'package:fe/presentation/views/desktop/auth/login_page.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,48 +48,52 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
       vsync: Navigator.of(context),
       duration: Duration(milliseconds: 300),
     );
-    final animation =
-        Tween<Offset>(
-          begin: Offset(0, -1), // mulai di luar layar atas
-          end: Offset(0, 0), // turun ke posisi
-        ).animate(
-          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-        );
+    final animation = Tween<Offset>(
+      begin: Offset(0, -1), // mulai di luar layar atas
+      end: Offset(0, 0), // turun ke posisi
+    ).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+    );
 
     final entry = OverlayEntry(
-      builder: (context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: SlideTransition(
-              position: animation,
-              child: Material(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 66, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: success ? AppColors.mintCream : AppColors.linen,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: AppColors.lightSlateGray,
-                      width: 1,
-                    ),
-                  ),
-                  child: PoppinText(
-                    text: message,
-                    styles: StyleText(
-                      size: 12,
-                      weight: AppWeights.bold,
-                      color: success ? AppColors.ufoGreen : AppColors.crimson,
+      builder:
+          (context) => Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: SlideTransition(
+                  position: animation,
+                  child: Material(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 66,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: success ? AppColors.mintCream : AppColors.linen,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: AppColors.lightSlateGray,
+                          width: 1,
+                        ),
+                      ),
+                      child: PoppinText(
+                        text: message,
+                        styles: StyleText(
+                          size: 12,
+                          weight: AppWeights.bold,
+                          color:
+                              success ? AppColors.ufoGreen : AppColors.crimson,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
     );
     overlay.insert(entry);
     animationController.forward();
@@ -209,11 +214,11 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                final username = _usernameController.text
-                                    .trim();
+                                final username =
+                                    _usernameController.text.trim();
                                 final email = _emailController.text.trim();
-                                final password = _passwordController.text
-                                    .trim();
+                                final password =
+                                    _passwordController.text.trim();
                                 final passwordConfirmed =
                                     _passwordConfirmedController.text.trim();
 
@@ -256,7 +261,7 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
                               TextButton(
                                 onPressed: () {
                                   // Navigasi kembali ke halaman login
-                                  Navigator.of(context).pushReplacement(
+                                  Navigator.of(context).push(
                                     PageRouteBuilder(
                                       pageBuilder:
                                           (
@@ -265,18 +270,17 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
                                             secondaryAnimation,
                                           ) =>
                                               const MyApp(), // Pastikan nama kelas login page desktop benar
-                                      transitionsBuilder:
-                                          (
-                                            context,
-                                            animation,
-                                            secondaryAnimation,
-                                            child,
-                                          ) {
-                                            return FadeTransition(
-                                              opacity: animation,
-                                              child: child,
-                                            );
-                                          },
+                                      transitionsBuilder: (
+                                        context,
+                                        animation,
+                                        secondaryAnimation,
+                                        child,
+                                      ) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      },
                                     ),
                                   );
                                 },
@@ -350,6 +354,9 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
         listener: (context, state) {
           if (state is AuthSuccess) {
             _showSnackBar(context, state.message, state.success);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => DesktopLoginPage()),
+            );
           } else if (state is AuthFailure) {
             if (_passwordController.text.trim() !=
                 _passwordConfirmedController.text.trim()) {

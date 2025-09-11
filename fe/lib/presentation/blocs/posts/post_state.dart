@@ -13,6 +13,19 @@ class PostsLoading extends PostState {
 }
 
 /// state sukses dengan dua list
+// class PostsLoaded extends PostState {
+//   final List<PostModel> allPosts;
+//   final List<PostModel> myPosts;
+
+//   const PostsLoaded({this.allPosts = const [], this.myPosts = const []});
+
+//   PostsLoaded copyWith({List<PostModel>? allPosts, List<PostModel>? myPosts}) {
+//     return PostsLoaded(
+//       allPosts: allPosts ?? this.allPosts,
+//       myPosts: myPosts ?? this.myPosts,
+//     );
+//   }
+// }
 class PostsLoaded extends PostState {
   final List<PostModel> allPosts;
   final List<PostModel> myPosts;
@@ -29,7 +42,14 @@ class PostsLoaded extends PostState {
 
 class PostsSuccess extends PostState {
   final String message;
-  const PostsSuccess(this.message);
+  final PostModel data;
+  const PostsSuccess(this.message, this.data);
+}
+
+class PostDeleteSuccess extends PostState {
+  final String message;
+
+  const PostDeleteSuccess(this.message);
 }
 
 class PostsFailure extends PostState {

@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/data/models/request/post_request.dart';
 import 'package:fe/presentation/blocs/posts/post_bloc.dart';
 import 'package:fe/presentation/blocs/posts/post_event.dart';
 import 'package:fe/presentation/blocs/posts/post_state.dart';
+import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +21,7 @@ class DesktopAddActivityPage extends StatefulWidget {
 class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
-  File? _selectedImage;
+  XFile? _selectedImage;
 
   @override
   void initState() {
@@ -42,10 +41,9 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
     );
-
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = pickedFile; // langsung aja
       });
     }
   }
@@ -61,7 +59,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
     final request = PostRequest(
       title: _titleController.text.trim(),
       content: _contentController.text.trim(),
-      image: _selectedImage!,
+      image: _selectedImage,
     );
     context.read<PostBloc>().add(CreatePost(request));
   }
@@ -89,18 +87,26 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
               if (state is PostsSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
+                    backgroundColor: AppColors.linen,
                     content: PoppinText(
                       text: state.message,
-                      styles: StyleText(),
+                      styles: StyleText(color: AppColors.ufoGreen),
                     ),
+                  ),
+                );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DesktopMainScaffold(index: 1),
                   ),
                 );
               } else if (state is PostsFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
+                    backgroundColor: AppColors.mutedRed,
                     content: PoppinText(
                       text: state.message,
-                      styles: StyleText(),
+                      styles: StyleText(color: AppColors.crimson),
                     ),
                   ),
                 );
@@ -178,14 +184,25 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                     ),
                     const Gap(24.0),
 
+                    //preview foto
+                    if (_selectedImage != null) ...[
+                      const Gap(16.0),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          _selectedImage!.path,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ],
+                    const Gap(24),
                     // Tombol Simpan
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed:
-                            state is PostsLoading
-                                ? null
-                                : _submit, // ✅ fix disable
+                        onPressed: state is PostsLoading ? null : _submit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.lightBlue,
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -193,18 +210,17 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        child:
-                            state is PostsLoading
-                                ? const CircularProgressIndicator(
+                        child: state is PostsLoading
+                            ? const CircularProgressIndicator(
+                                color: AppColors.white,
+                              )
+                            : PoppinText(
+                                text: 'Simpan',
+                                styles: StyleText(
                                   color: AppColors.white,
-                                ) // ✅ indikator loading
-                                : const Text(
-                                  'Simpan',
-                                  style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 18,
-                                  ),
+                                  size: 18,
                                 ),
+                              ),
                       ),
                     ),
                   ],

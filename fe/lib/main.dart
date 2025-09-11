@@ -5,7 +5,6 @@ import 'package:fe/presentation/blocs/auth/auth_bloc.dart';
 import 'package:fe/presentation/blocs/posts/post_bloc.dart';
 import 'package:fe/presentation/layouts/rensponsive_layout.dart';
 import 'package:fe/presentation/views/desktop/auth/login_page.dart';
-import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
 import 'package:fe/presentation/views/mobile/navigation/mobile_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
