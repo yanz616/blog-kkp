@@ -1,0 +1,3 @@
+register dan login -> done
+fetchAllPosts & fetchMyPosts & createPost & updatePosts & deletePost ->done
+fetchUsers -> done --> editProfile(otw) &logout
