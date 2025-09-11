@@ -30,8 +30,6 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: PoppinText(
