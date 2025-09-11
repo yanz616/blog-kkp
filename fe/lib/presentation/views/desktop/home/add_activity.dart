@@ -97,7 +97,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DesktopMainScaffold(),
+                    builder: (context) => DesktopMainScaffold(index: 1),
                   ),
                 );
               } else if (state is PostsFailure) {
@@ -210,18 +210,17 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        child:
-                            state is PostsLoading
-                                ? const CircularProgressIndicator(
+                        child: state is PostsLoading
+                            ? const CircularProgressIndicator(
+                                color: AppColors.white,
+                              )
+                            : PoppinText(
+                                text: 'Simpan',
+                                styles: StyleText(
                                   color: AppColors.white,
-                                )
-                                : PoppinText(
-                                  text: 'Simpan',
-                                  styles: StyleText(
-                                    color: AppColors.white,
-                                    size: 18,
-                                  ),
+                                  size: 18,
                                 ),
+                              ),
                       ),
                     ),
                   ],

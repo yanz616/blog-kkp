@@ -96,7 +96,7 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DesktopMainScaffold(),
+                    builder: (context) => DesktopMainScaffold(index: 1),
                   ),
                 );
               } else if (state is PostsFailure) {

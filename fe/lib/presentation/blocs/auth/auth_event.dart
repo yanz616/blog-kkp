@@ -13,3 +13,10 @@ class RegisterEvent extends AuthEvent {
 
   RegisterEvent(this.registerRequest);
 }
+
+class UpdateUserEvent extends AuthEvent {
+  final UpdateUserRequest updateUserRequest;
+  final int id;
+
+  UpdateUserEvent(this.updateUserRequest, this.id);
+}
