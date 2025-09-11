@@ -35,6 +35,8 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
     return Column(
       children: [
         AppBar(
+          automaticallyImplyLeading: false,
+          leading: SizedBox(),
           title: PoppinText(
             text: 'Kegiatanku',
             styles: StyleText(
