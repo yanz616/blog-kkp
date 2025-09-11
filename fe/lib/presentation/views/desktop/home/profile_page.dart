@@ -23,6 +23,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
     final email = await LocalStorage.getEmail() ?? "";
     final avatar = await LocalStorage.getAvatar() ?? "";
     final created = await LocalStorage.getCreated() ?? "";
+    final isAdmin = await LocalStorage.getIsAdmin() ?? false;
 
     if (!mounted) return;
 
@@ -34,6 +35,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
         avatar: avatar,
         token: token,
         createdAt: created,
+        isAdmin: isAdmin,
       );
     });
   }

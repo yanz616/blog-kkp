@@ -28,6 +28,8 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
     return Column(
       children: [
         AppBar(
+          automaticallyImplyLeading: false,
+          leading: SizedBox(),
           title: PoppinText(
             text: 'Kegiatan Magang',
             styles: StyleText(
