@@ -6,6 +6,7 @@ import 'package:fe/presentation/views/desktop/home/my_activity_page.dart';
 import 'package:fe/presentation/views/desktop/home/profile_page.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DesktopMainScaffold extends StatefulWidget {
@@ -45,15 +46,14 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white.withOpacity(0.15) : Colors.transparent,
+          color: isSelected
+              ? Colors.white.withValues(alpha: 0.15)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.white : Colors.white70,
-            ),
+            Icon(icon, color: isSelected ? Colors.white : Colors.white70),
             const SizedBox(width: 12),
             Expanded(
               child: PoppinText(
@@ -86,7 +86,7 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 12,
                   offset: const Offset(2, 0),
                 ),
@@ -122,38 +122,95 @@ class _DesktopMainScaffoldState extends State<DesktopMainScaffold> {
 
                 // Logout
                 InkWell(
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.clear();
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.warning_amber_rounded,
+                                color: AppColors.crimson,
+                              ),
+                              const Gap(8),
+                              PoppinText(
+                                text: 'Konfirmasi Logout',
+                                styles: StyleText(weight: AppWeights.semiBold),
+                              ),
+                            ],
+                          ),
+                          content: PoppinText(
+                            text: 'Apakah Anda yakin ingin Logout?',
+                            styles: StyleText(),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.of(dialogContext).pop(),
+                              child: PoppinText(
+                                text: 'Batal',
+                                styles: StyleText(color: AppColors.darkGray),
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.crimson,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () async {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.clear();
 
-                    if (!mounted) return;
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              const DesktopLoginPage(),
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
-                    });
+                                if (!mounted) return;
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          const DesktopLoginPage(),
+                                    ),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                });
+                              },
+                              child: PoppinText(
+                                text: 'Logout',
+                                styles: StyleText(color: AppColors.white),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: const [
                         Icon(Icons.logout, color: Colors.white70),
                         SizedBox(width: 12),
-                        Text(
-                          'Keluar',
-                          style: TextStyle(color: Colors.white70),
-                        ),
+                        Text('Keluar', style: TextStyle(color: Colors.white70)),
                       ],
                     ),
                   ),

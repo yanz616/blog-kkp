@@ -27,6 +27,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: PoppinText(
           text: 'Kegiatan Magang',
           styles: StyleText(
@@ -52,7 +53,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 350,
-                  childAspectRatio: 1,
+                  childAspectRatio: 1.2,
                   crossAxisSpacing: 24.0,
                   mainAxisSpacing: 24.0,
                 ),

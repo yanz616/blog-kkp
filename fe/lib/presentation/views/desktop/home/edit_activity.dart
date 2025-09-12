@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/data/models/posts/post_model.dart';
@@ -118,7 +117,7 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
             borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -183,9 +182,9 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
                     const SizedBox(height: 16),
 
                     // Deskripsi (pakai Quill)
-                    QuillToolbar.simple(
-                      configurations: QuillSimpleToolbarConfigurations(
-                        controller: _contentController,
+                    QuillSimpleToolbar(
+                      controller: _contentController,
+                      config: QuillSimpleToolbarConfig(
                         multiRowsDisplay: false,
                         showAlignmentButtons: true,
                         showBackgroundColorButton: true,
@@ -201,8 +200,8 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: QuillEditor.basic(
-                        configurations: QuillEditorConfigurations(
-                          controller: _contentController,
+                        controller: _contentController,
+                        config: QuillEditorConfig(
                           padding: EdgeInsets.symmetric(
                             vertical: 6,
                             horizontal: 20,
@@ -225,8 +224,8 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
                         ),
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
-                          transitionBuilder:
-                              (child, animation) => FadeTransition(
+                          transitionBuilder: (child, animation) =>
+                              FadeTransition(
                                 opacity: animation,
                                 child: ScaleTransition(
                                   scale: Tween<double>(
@@ -236,31 +235,30 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
                                   child: child,
                                 ),
                               ),
-                          child:
-                              _selectedImage != null
-                                  ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.file(
-                                      File(_selectedImage!.path),
-                                      key: ValueKey(_selectedImage!.path),
-                                      height: 200,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                  : (widget.postData.image != null &&
-                                      widget.postData.image!.isNotEmpty)
-                                  ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.network(
-                                      widget.postData.image!,
-                                      key: ValueKey(widget.postData.image),
-                                      height: 200,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                  : const SizedBox(),
+                          child: _selectedImage != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.network(
+                                    _selectedImage!.path,
+                                    key: ValueKey(_selectedImage!.path),
+                                    height: 200,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : (widget.postData.image != null &&
+                                    widget.postData.image!.isNotEmpty)
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.network(
+                                    widget.postData.image!,
+                                    key: ValueKey(widget.postData.image),
+                                    height: 200,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : const SizedBox(),
                         ),
                       ),
                     ),
@@ -280,19 +278,18 @@ class _DesktopEditActivityPageState extends State<DesktopEditActivityPage> {
                           ),
                           elevation: 4,
                         ),
-                        child:
-                            state is PostsLoading
-                                ? const CircularProgressIndicator(
+                        child: state is PostsLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                'Simpan Perubahan',
+                                style: TextStyle(
+                                  fontSize: 18,
                                   color: Colors.white,
-                                )
-                                : const Text(
-                                  'Simpan Perubahan',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  fontWeight: FontWeight.w600,
                                 ),
+                              ),
                       ),
                     ),
                   ],

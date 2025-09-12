@@ -31,7 +31,7 @@ class DesktopActivityDetailPage extends StatelessWidget {
           child: Icon(Icons.arrow_back),
         ),
       ),
-      backgroundColor: Colors.white, // Bersih tanpa abu-abu
+
       body: Padding(
         padding: const EdgeInsets.all(32), // lebih lega
         child: SingleChildScrollView(
@@ -44,7 +44,7 @@ class DesktopActivityDetailPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 25,
                     offset: const Offset(0, 10),
                   ),
@@ -61,24 +61,22 @@ class DesktopActivityDetailPage extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.lightGray,
-                        image:
-                            post.image != null
-                                ? DecorationImage(
-                                  image: NetworkImage(post.image!),
-                                  fit: BoxFit.cover,
-                                )
-                                : null,
-                      ),
-                      child:
-                          post.image == null
-                              ? const Center(
-                                child: Icon(
-                                  Icons.photo_library_outlined,
-                                  size: 80,
-                                  color: AppColors.mediumGray,
-                                ),
+                        image: post.image != null
+                            ? DecorationImage(
+                                image: NetworkImage(post.image!),
+                                fit: BoxFit.cover,
                               )
-                              : null,
+                            : null,
+                      ),
+                      child: post.image == null
+                          ? const Center(
+                              child: Icon(
+                                Icons.photo_library_outlined,
+                                size: 80,
+                                color: AppColors.mediumGray,
+                              ),
+                            )
+                          : null,
                     ),
                   ),
 
@@ -135,11 +133,7 @@ class DesktopActivityDetailPage extends StatelessWidget {
                   const Gap(24),
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 750),
-                    child: QuillEditor.basic(
-                      configurations: QuillEditorConfigurations(
-                        controller: controller,
-                      ),
-                    ),
+                    child: QuillEditor.basic(controller: controller),
                   ),
                   // Deskripsi
                 ],

@@ -114,7 +114,7 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                             childAspectRatio: 0.85,
                             crossAxisSpacing: 16.0,
                             mainAxisSpacing: 18.0,
-                            mainAxisExtent: 460,
+                            mainAxisExtent: 380,
                           ),
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
@@ -128,19 +128,16 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        DesktopActivityDetailPage(post: items),
+                                builder: (context) =>
+                                    DesktopActivityDetailPage(post: items),
                               ),
                             );
                           },
                           onEdit: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder:
-                                    (context) => DesktopEditActivityPage(
-                                      postData: items,
-                                    ),
+                                builder: (context) =>
+                                    DesktopEditActivityPage(postData: items),
                               ),
                             );
                           },
@@ -174,9 +171,8 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                                   ),
                                   actions: <Widget>[
                                     TextButton(
-                                      onPressed:
-                                          () =>
-                                              Navigator.of(dialogContext).pop(),
+                                      onPressed: () =>
+                                          Navigator.of(dialogContext).pop(),
                                       child: PoppinText(
                                         text: 'Batal',
                                         styles: StyleText(

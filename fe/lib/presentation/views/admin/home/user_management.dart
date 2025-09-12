@@ -50,6 +50,9 @@ class _UserManagementPageState extends State<UserManagementPage> {
           }
           if (state is LoadedUsers) {
             final List<User> users = state.users;
+            if (users.isEmpty) {
+              return Center(child: Text('User Tidak ada'));
+            }
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),
               child: Column(
@@ -155,9 +158,12 @@ class _UserManagementPageState extends State<UserManagementPage> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            setState(() {
-                                              users.removeAt(index);
-                                            });
+                                            context.read<AdminBloc>().add(
+                                              DeleteUser(user.id),
+                                            );
+                                            // setState(() {
+                                            //   users.removeAt(index);
+                                            // });
                                             Navigator.of(context).pop();
                                           },
                                           child: const Text(

@@ -48,52 +48,48 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
       vsync: Navigator.of(context),
       duration: Duration(milliseconds: 300),
     );
-    final animation = Tween<Offset>(
-      begin: Offset(0, -1), // mulai di luar layar atas
-      end: Offset(0, 0), // turun ke posisi
-    ).animate(
-      CurvedAnimation(parent: animationController, curve: Curves.easeOut),
-    );
+    final animation =
+        Tween<Offset>(
+          begin: Offset(0, -1), // mulai di luar layar atas
+          end: Offset(0, 0), // turun ke posisi
+        ).animate(
+          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+        );
 
     final entry = OverlayEntry(
-      builder:
-          (context) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: SlideTransition(
-                  position: animation,
-                  child: Material(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 66,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: success ? AppColors.mintCream : AppColors.linen,
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: AppColors.lightSlateGray,
-                          width: 1,
-                        ),
-                      ),
-                      child: PoppinText(
-                        text: message,
-                        styles: StyleText(
-                          size: 12,
-                          weight: AppWeights.bold,
-                          color:
-                              success ? AppColors.ufoGreen : AppColors.crimson,
-                        ),
-                      ),
+      builder: (context) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: SlideTransition(
+              position: animation,
+              child: Material(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 66, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: success ? AppColors.mintCream : AppColors.linen,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(
+                      color: AppColors.lightSlateGray,
+                      width: 1,
+                    ),
+                  ),
+                  child: PoppinText(
+                    text: message,
+                    styles: StyleText(
+                      size: 12,
+                      weight: AppWeights.bold,
+                      color: success ? AppColors.ufoGreen : AppColors.crimson,
                     ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
+        ],
+      ),
     );
     overlay.insert(entry);
     animationController.forward();
@@ -107,12 +103,13 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is AuthLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+          // if (state is AuthLoading) {
+          //   return Center(child: CircularProgressIndicator());
+          // }
           return Center(
             child: Container(
               width: 900, // Lebar kontainer untuk desktop/tablet
+              margin: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(16.0),
@@ -214,11 +211,11 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                final username =
-                                    _usernameController.text.trim();
+                                final username = _usernameController.text
+                                    .trim();
                                 final email = _emailController.text.trim();
-                                final password =
-                                    _passwordController.text.trim();
+                                final password = _passwordController.text
+                                    .trim();
                                 final passwordConfirmed =
                                     _passwordConfirmedController.text.trim();
 
@@ -242,13 +239,17 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
-                              child: PoppinText(
-                                text: 'Daftar',
-                                styles: StyleText(
-                                  size: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              child: state is AuthLoading
+                                  ? const CircularProgressIndicator(
+                                      color: AppColors.white,
+                                    )
+                                  : PoppinText(
+                                      text: 'Daftar',
+                                      styles: StyleText(
+                                        size: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
                           ),
                           const Gap(16.0),
@@ -270,17 +271,18 @@ class _DesktopRegisterPageState extends State<DesktopRegisterPage> {
                                             secondaryAnimation,
                                           ) =>
                                               const MyApp(), // Pastikan nama kelas login page desktop benar
-                                      transitionsBuilder: (
-                                        context,
-                                        animation,
-                                        secondaryAnimation,
-                                        child,
-                                      ) {
-                                        return FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        );
-                                      },
+                                      transitionsBuilder:
+                                          (
+                                            context,
+                                            animation,
+                                            secondaryAnimation,
+                                            child,
+                                          ) {
+                                            return FadeTransition(
+                                              opacity: animation,
+                                              child: child,
+                                            );
+                                          },
                                     ),
                                   );
                                 },

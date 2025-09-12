@@ -1,14 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:fe/core/constants/app_font_weigts.dart';
 import 'package:fe/data/models/request/post_request.dart';
 import 'package:fe/presentation/blocs/posts/post_bloc.dart';
 import 'package:fe/presentation/blocs/posts/post_event.dart';
 import 'package:fe/presentation/blocs/posts/post_state.dart';
-import 'package:fe/presentation/views/desktop/navigation/desktop_navigation.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:fe/presentation/widgets/my_text.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:gap/gap.dart';
@@ -23,13 +19,13 @@ class DesktopAddActivityPage extends StatefulWidget {
 
 class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
   late TextEditingController _titleController;
-  late quill.QuillController _contentController;
+  late QuillController _contentController;
   XFile? _selectedImage;
 
   @override
   void initState() {
     _titleController = TextEditingController();
-    _contentController = quill.QuillController.basic();
+    _contentController = QuillController.basic();
     super.initState();
   }
 
@@ -88,7 +84,16 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FB),
+      // backgroundColor: const Color(0xFFF8F9FB),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(top: 16, left: 12),
+        child: FloatingActionButton(
+          backgroundColor: Colors.white,
+          onPressed: () => Navigator.of(context).pop(),
+          child: Icon(Icons.arrow_back),
+        ),
+      ),
       body: Center(
         child: Container(
           width: 700,
@@ -98,7 +103,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
             borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -176,22 +181,22 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                       ),
                       child: Column(
                         children: [
-                          quill.QuillToolbar.simple(
-                            configurations:
-                                quill.QuillSimpleToolbarConfigurations(
-                                  controller: _contentController,
-                                  multiRowsDisplay: false,
-                                  showAlignmentButtons: true,
-                                  showBackgroundColorButton: true,
-                                  showColorButton: true,
-                                ),
+                          QuillSimpleToolbar(
+                            controller: _contentController,
+
+                            config: QuillSimpleToolbarConfig(
+                              multiRowsDisplay: false,
+                              showAlignmentButtons: true,
+                              showBackgroundColorButton: true,
+                              showColorButton: true,
+                            ),
                           ),
                           SizedBox(
                             height: 200,
-                            child: quill.QuillEditor.basic(
-                              configurations: quill.QuillEditorConfigurations(
-                              padding: EdgeInsets.all(16),
-                                controller: _contentController,
+                            child: QuillEditor.basic(
+                              controller: _contentController,
+                              config: QuillEditorConfig(
+                                padding: EdgeInsets.all(16),
                                 placeholder: "Tulis deskripsi kegiatan...",
                               ),
                             ),
@@ -211,18 +216,17 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                           color: Colors.grey[100],
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child:
-                            _selectedImage == null
-                                ? const DottedBorderPlaceholder()
-                                : ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.file(
-                                    File(_selectedImage!.path),
-                                    height: 200,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
+                        child: _selectedImage == null
+                            ? const DottedBorderPlaceholder()
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Image.network(
+                                  _selectedImage!.path,
+                                  height: 200,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
                                 ),
+                              ),
                       ),
                     ),
 
@@ -241,19 +245,18 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                           ),
                           elevation: 4,
                         ),
-                        child:
-                            state is PostsLoading
-                                ? const CircularProgressIndicator(
+                        child: state is PostsLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                'Simpan',
+                                style: TextStyle(
+                                  fontSize: 18,
                                   color: Colors.white,
-                                )
-                                : const Text(
-                                  'Simpan',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  fontWeight: FontWeight.w600,
                                 ),
+                              ),
                       ),
                     ),
                   ],
@@ -301,11 +304,10 @@ class DottedBorderPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     const dashWidth = 6.0;
     const dashSpace = 4.0;
-    final paint =
-        Paint()
-          ..color = Colors.grey[600]!
-          ..strokeWidth = 1.6
-          ..style = PaintingStyle.stroke;
+    final paint = Paint()
+      ..color = Colors.grey[600]!
+      ..strokeWidth = 1.6
+      ..style = PaintingStyle.stroke;
 
     final rect = RRect.fromRectAndRadius(
       Rect.fromLTWH(0, 0, size.width, size.height),

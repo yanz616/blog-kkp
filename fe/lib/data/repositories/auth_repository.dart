@@ -34,6 +34,7 @@ class AuthRepository {
         await LocalStorage.setEmail(res.data.email);
         await LocalStorage.setAvatar(res.data.avatar ?? "");
         await LocalStorage.setCreatedAt(res.data.createdAt!);
+        await LocalStorage.setIsAdmin(res.data.isAdmin);
         return res;
       } else {
         return ErrorResponse.fromJson(jsonData);

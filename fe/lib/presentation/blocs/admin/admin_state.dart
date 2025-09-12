@@ -19,6 +19,12 @@ class LoadedUsers extends AdminState {
   const LoadedUsers(this.message, this.users);
 }
 
+class SuccessDeleteUser extends AdminState {
+  final String message;
+
+  const SuccessDeleteUser(this.message);
+}
+
 class FailureAdminState extends AdminState {
   final String message;
 

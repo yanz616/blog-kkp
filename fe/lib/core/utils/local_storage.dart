@@ -41,6 +41,11 @@ class LocalStorage {
     await prefs.setString('created', value);
   }
 
+  static Future<void> setIsAdmin(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isAdmin', value);
+  }
+
   static Future<int?> getId() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt('id');

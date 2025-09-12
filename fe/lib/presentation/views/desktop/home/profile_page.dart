@@ -105,10 +105,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
             // Email
             PoppinText(
               text: userData!.email,
-              styles: StyleText(
-                size: 16,
-                color: AppColors.mediumGray,
-              ),
+              styles: StyleText(size: 16, color: AppColors.mediumGray),
             ),
 
             const Gap(6.0),
@@ -117,10 +114,7 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
             PoppinText(
               text:
                   "Bergabung pada: ${DateTimeHelper.formatLongDate(userData?.createdAt)}",
-              styles: StyleText(
-                size: 14,
-                color: AppColors.mediumGray,
-              ),
+              styles: StyleText(size: 14, color: AppColors.mediumGray),
             ),
 
             const Gap(40),
@@ -140,18 +134,19 @@ class _DesktopProfilePageState extends State<DesktopProfilePage> {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.lightBlue,
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14.0),
-                    ),
-                  ).copyWith(
-                    overlayColor: WidgetStateProperty.all(
-                      AppColors.lightBlue.withOpacity(0.85),
-                    ),
-                  ),
+                  style:
+                      ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.lightBlue,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
+                      ).copyWith(
+                        overlayColor: WidgetStateProperty.all(
+                          AppColors.lightBlue.withValues(alpha: 0.85),
+                        ),
+                      ),
                   child: PoppinText(
                     text: 'Edit Profil',
                     styles: StyleText(

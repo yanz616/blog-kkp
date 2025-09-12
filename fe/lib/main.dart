@@ -10,6 +10,7 @@ import 'package:fe/presentation/views/desktop/auth/login_page.dart';
 import 'package:fe/presentation/views/mobile/navigation/mobile_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main(List<String> args) async {
@@ -33,6 +34,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => AdminBloc(AdminRepository())),
       ],
       child: MaterialApp(
+        localizationsDelegates: const [
+          // GlobalMaterialLocalizations.delegate,
+          // GlobalCupertinoLocalizations.delegate,
+          // GlobalWidgetsLocalizations.delegate
+          FlutterQuillLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         theme: ThemeData(scaffoldBackgroundColor: AppColors.youngGray),
         home: const ResponsiveLayout(
