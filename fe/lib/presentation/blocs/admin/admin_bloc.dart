@@ -18,5 +18,15 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
         emit(FailureAdminState(response.message));
       }
     });
+
+    on<DeleteUser>((event, emit) async {
+      final response = await adminRepository.deleteUsers(event.id);
+      if (response is SuccessResponse) {
+        emit(SuccessDeleteUser(response.message));
+        add(FetchUsers());
+      } else if (response is ErrorResponse) {
+        emit(FailureAdminState(response.message));
+      }
+    });
   }
 }

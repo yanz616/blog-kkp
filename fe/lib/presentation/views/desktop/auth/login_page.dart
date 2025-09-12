@@ -23,14 +23,22 @@ class DesktopLoginPage extends StatefulWidget {
 class _DesktopLoginPageState extends State<DesktopLoginPage> {
   late TextEditingController _emailController;
   late TextEditingController _passController;
+  bool _isObscure = true;
 
   Future<void> isAuthenticated() async {
     final token = await LocalStorage.getString();
+    final isAdmin = await LocalStorage.getIsAdmin();
     if (!mounted) return;
     if (token != null && token.isNotEmpty) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => DesktopMainScaffold()),
-      );
+      if (isAdmin == true) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => AdminMainScaffold()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => DesktopMainScaffold()),
+        );
+      }
     }
   }
 
@@ -112,9 +120,9 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is AuthLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+          // if (state is AuthLoading) {
+          //   return Center(child: CircularProgressIndicator());
+          // }
           return Center(
             child: Container(
               margin: EdgeInsets.symmetric(vertical: 16),
@@ -143,39 +151,44 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                           bottomLeft: Radius.circular(16.0),
                         ),
                       ),
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(24.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.dashboard,
-                                size: 80,
+                      child: Padding(
+                        padding: EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 200,
+                              // padding: EdgeInsets.all(20),
+                              child: Image.asset("assets/logo/ikpLogo.png"),
+                            ),
+
+                            // Icon(
+                            //   Icons.dashboard,
+                            //   size: 80,
+                            //   color: AppColors.white,
+                            // ),
+                            Gap(16),
+                            PoppinText(
+                              text: 'Selamat Datang di Portal Magang',
+                              textAlign: TextAlign.center,
+                              styles: StyleText(
+                                size: 24,
+                                weight: AppWeights.bold,
                                 color: AppColors.white,
                               ),
-                              Gap(16),
-                              PoppinText(
-                                text: 'Selamat Datang di Portal Magang',
-                                textAlign: TextAlign.center,
-                                styles: StyleText(
-                                  size: 24,
-                                  weight: AppWeights.bold,
-                                  color: AppColors.white,
-                                ),
+                            ),
+                            Gap(8),
+                            PoppinText(
+                              text:
+                                  'Kelola dokumentasi kegiatan Anda dengan mudah.',
+                              textAlign: TextAlign.center,
+                              styles: StyleText(
+                                size: 16,
+                                color: AppColors.transparentWhite,
                               ),
-                              Gap(8),
-                              PoppinText(
-                                text:
-                                    'Kelola dokumentasi kegiatan Anda dengan mudah.',
-                                textAlign: TextAlign.center,
-                                styles: StyleText(
-                                  size: 16,
-                                  color: AppColors.transparentWhite,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -222,7 +235,7 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                           const Gap(16.0),
                           TextFormField(
                             controller: _passController,
-                            obscureText: true,
+                            obscureText: _isObscure,
                             decoration: InputDecoration(
                               labelText: 'Kata Sandi',
                               prefixIcon: const Icon(
@@ -260,13 +273,17 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
-                              child: PoppinText(
-                                text: 'Masuk',
-                                styles: StyleText(
-                                  size: 18,
-                                  color: AppColors.white,
-                                ),
-                              ),
+                              child: state is AuthLoading
+                                  ? const CircularProgressIndicator(
+                                      color: AppColors.white,
+                                    )
+                                  : PoppinText(
+                                      text: 'Masuk',
+                                      styles: StyleText(
+                                        size: 18,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
                             ),
                           ),
                           const Gap(16.0),

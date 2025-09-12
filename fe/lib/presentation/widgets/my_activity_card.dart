@@ -1,7 +1,7 @@
-import 'package:fe/core/constants/app_colors.dart';
 import 'package:fe/data/helpers/date_time_helper.dart';
 import 'package:fe/presentation/widgets/my_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 // import 'package:gap/gap.dart';
 
 class MyActivityCard extends StatefulWidget {
@@ -42,14 +42,18 @@ class _MyActivityCardState extends State<MyActivityCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()..scale(_isHovered ? 1.03 : 1.0),
+        transform: Matrix4.diagonal3Values(
+          _isHovered ? 1.03 : 1.0,
+          _isHovered ? 1.03 : 1.0,
+          1.0,
+        ),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           clipBehavior: Clip.antiAlias,
           elevation: _isHovered ? 12 : 4,
-          shadowColor: Colors.black.withOpacity(0.15),
+          shadowColor: Colors.black.withValues(alpha: 0.15),
           child: InkWell(
             onTap: widget.onTap,
             child: Column(
@@ -64,32 +68,28 @@ class _MyActivityCardState extends State<MyActivityCard> {
                       Container(
                         decoration: BoxDecoration(
                           color: Color(0xffEDE9F0),
-                          image:
-                              widget.imageUrl != null
-                                  ? DecorationImage(
-                                    image: NetworkImage(
-                                      widget.imageUrl!.trim(),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                  : null,
-                        ),
-                        child:
-                            widget.imageUrl == null
-                                ? const Center(
-                                  child: Icon(
-                                    Icons.photo_library_outlined,
-                                    size: 60,
-                                    color: Colors.grey,
-                                  ),
+                          image: widget.imageUrl != null
+                              ? DecorationImage(
+                                  image: NetworkImage(widget.imageUrl!.trim()),
+                                  fit: BoxFit.cover,
                                 )
-                                : null,
+                              : null,
+                        ),
+                        child: widget.imageUrl == null
+                            ? const Center(
+                                child: Icon(
+                                  Icons.photo_library_outlined,
+                                  size: 60,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            : null,
                       ),
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.black.withOpacity(0.6),
+                              Colors.black.withValues(alpha: 0.6),
                               Colors.transparent,
                             ],
                             begin: Alignment.bottomCenter,
@@ -113,7 +113,7 @@ class _MyActivityCardState extends State<MyActivityCard> {
                     ],
                   ),
                 ),
-
+                Gap(8),
                 // Bagian bawah: avatar, author, date, dan action button
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -124,14 +124,12 @@ class _MyActivityCardState extends State<MyActivityCard> {
                     children: [
                       CircleAvatar(
                         radius: 18,
-                        backgroundImage:
-                            widget.avatar != null
-                                ? NetworkImage(widget.avatar!)
-                                : null,
-                        child:
-                            widget.avatar == null
-                                ? const Icon(Icons.person, color: Colors.white)
-                                : null,
+                        backgroundImage: widget.avatar != null
+                            ? NetworkImage(widget.avatar!)
+                            : null,
+                        child: widget.avatar == null
+                            ? const Icon(Icons.person, color: Colors.white)
+                            : null,
                       ),
                       const SizedBox(width: 10),
                       Expanded(

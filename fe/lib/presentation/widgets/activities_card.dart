@@ -38,14 +38,18 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        transform: Matrix4.identity()..scale(_isHovered ? 1.03 : 1.0),
+        transform: Matrix4.diagonal3Values(
+          _isHovered ? 1.03 : 1.0,
+          _isHovered ? 1.03 : 1.0,
+          1.0,
+        ),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
           clipBehavior: Clip.antiAlias,
           elevation: _isHovered ? 12 : 4,
-          shadowColor: Colors.black.withOpacity(0.15),
+          shadowColor: Colors.black.withValues(alpha: 0.15),
           child: InkWell(
             onTap: widget.onTap,
             child: Column(
@@ -59,32 +63,29 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
                       Container(
                         decoration: BoxDecoration(
                           color: AppColors.lightGray,
-                          image:
-                              widget.imageUrl != null
-                                  ? DecorationImage(
-                                    image: NetworkImage(
-                                      widget.imageUrl!.trim(),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                  : null,
-                        ),
-                        child:
-                            widget.imageUrl == null
-                                ? const Center(
-                                  child: Icon(
-                                    Icons.photo_library_outlined,
-                                    size: 60,
-                                    color: AppColors.mediumGray,
-                                  ),
+                          image: widget.imageUrl != null
+                              ? DecorationImage(
+                                  image: NetworkImage(widget.imageUrl!.trim()),
+                                  fit: BoxFit.cover,
                                 )
-                                : null,
+                              : null,
+                        ),
+                        child: widget.imageUrl == null
+                            ? const Center(
+                                child: Icon(
+                                  Icons.photo_library_outlined,
+                                  size: 60,
+                                  color: AppColors.mediumGray,
+                                ),
+                              )
+                            : null,
                       ),
+
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              Colors.black.withOpacity(0.6),
+                              Colors.black.withValues(alpha: 0.6),
                               Colors.transparent,
                             ],
                             begin: Alignment.bottomCenter,
@@ -92,6 +93,7 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
                           ),
                         ),
                       ),
+
                       Positioned(
                         bottom: 12,
                         left: 12,
@@ -108,6 +110,7 @@ class _ActivitiesCardState extends State<ActivitiesCard> {
                     ],
                   ),
                 ),
+                Gap(6),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
