@@ -121,6 +121,7 @@ class _MyActivityCardState extends State<MyActivityCard> {
                     vertical: 12,
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
                         radius: 18,

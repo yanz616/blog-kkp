@@ -56,10 +56,6 @@ class AdminDashboardPage extends StatelessWidget {
                             icon: Icons.people,
                             color: Color(0xFF003366), // Biru Tua
                           );
-                        } else if (state is FailureAdminState) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Gagal Load Value User")),
-                          );
                         }
                         return SizedBox.shrink();
                       },

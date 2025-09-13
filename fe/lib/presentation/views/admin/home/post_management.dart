@@ -13,89 +13,68 @@ class PostManagementPage extends StatefulWidget {
 }
 
 class _PostManagementPageState extends State<PostManagementPage> {
-  // Set untuk menyimpan indeks postingan yang dipilih
   final Set<int> _selectedRows = {};
 
   @override
   void initState() {
-    context.read<PostBloc>().add(FetchPosts());
     super.initState();
+    context.read<PostBloc>().add(FetchPosts());
   }
 
-  // Fungsi untuk menghapus semua postingan yang dipilih
-  // void _deleteSelectedPosts() {
-  //   final List<int> sortedIndices = _selectedRows.toList()
-  //     ..sort((a, b) => b.compareTo(a));
+  /// Hapus banyak postingan berdasarkan ID yang sudah dichecklist
+  void _deleteSelectedPosts(List<PostModel> posts) {
+    final idsToDelete = _selectedRows.map((i) => posts[i].id).toList();
 
-  //   // ==========================================================
-  //   // DI SINI ADALAH TEMPAT UNTUK FUNGSI HAPUS MASSAL DARI BACKEND
-  //   // Anda bisa membuat fungsi asinkron untuk memanggil API Anda
-  //   // Contoh:
-  //   // Future<void> deletePostsFromApi() async {
-  //   //   try {
-  //   //     for (final index in sortedIndices) {
-  //   //       final postId = posts[index]['id']; // Asumsi Anda punya ID
-  //   //       await apiService.deletePost(postId);
-  //   //     }
-  //   //     // Setelah berhasil, baru perbarui UI
-  //   //     setState(() {
-  //   //       for (final index in sortedIndices) {
-  //   //         posts.removeAt(index);
-  //   //       }
-  //   //       _selectedRows.clear();
-  //   //     });
-  //   //     ScaffoldMessenger.of(context).showSnackBar(
-  //   //       SnackBar(content: Text('Postingan berhasil dihapus!')),
-  //   //     );
-  //   //   } catch (e) {
-  //   //     ScaffoldMessenger.of(context).showSnackBar(
-  //   //       SnackBar(content: Text('Gagal menghapus: $e')),
-  //   //     );
-  //   //   }
-  //   // }
-  //   // ==========================================================
+    for (final id in idsToDelete) {
+      context.read<PostBloc>().add(DeletePost(id));
+    }
 
-  //   // Perbarui UI jika penghapusan di backend berhasil
-  //   setState(() {
-  //     for (final index in sortedIndices) {
-  //       posts.removeAt(index);
-  //     }
-  //     _selectedRows.clear(); // Bersihkan pilihan setelah dihapus
-  //   });
+    setState(() {
+      _selectedRows.clear();
+    });
 
-  // ScaffoldMessenger.of(context).showSnackBar(
-  //   SnackBar(
-  //     content: Text('${sortedIndices.length} postingan berhasil dihapus!'),
-  //   ),
-  // );
-  // }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${idsToDelete.length} postingan berhasil dihapus!'),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: _selectedRows.isNotEmpty
-      //     ? FloatingActionButton.extended(
-      //         onPressed: _deleteSelectedPosts,
-      //         label: Text('Hapus (${_selectedRows.length})'),
-      //         icon: const Icon(Icons.delete),
-      //         backgroundColor: Colors.red,
-      //       )
-      //     : null,
+      floatingActionButton: _selectedRows.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                final bloc = context.read<PostBloc>();
+                final state = bloc.state;
+                if (state is PostsLoaded) {
+                  _deleteSelectedPosts(state.allPosts);
+                }
+              },
+              label: Text('Hapus (${_selectedRows.length})'),
+              icon: const Icon(Icons.delete),
+              backgroundColor: Colors.red,
+            )
+          : null,
       body: BlocBuilder<PostBloc, PostState>(
         builder: (context, state) {
           if (state is PostsLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
+
           if (state is PostsLoaded) {
-            final List<PostModel> posts = state.allPosts;
+            final posts = state.allPosts;
+
             if (posts.isEmpty) {
-              return Center(child: Text("Tidak ada Postingan"));
+              return const Center(child: Text("Tidak ada Postingan"));
             }
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+                children: [
                   const Text(
                     'Manajemen Postingan',
                     style: TextStyle(
@@ -155,13 +134,13 @@ class _PostManagementPageState extends State<PostManagementPage> {
                       ],
                       rows: List.generate(posts.length, (index) {
                         final post = posts[index];
-                        final bool isSelected = _selectedRows.contains(index);
+                        final isSelected = _selectedRows.contains(index);
 
                         return DataRow(
                           selected: isSelected,
-                          onSelectChanged: (bool? newBool) {
+                          onSelectChanged: (bool? selected) {
                             setState(() {
-                              if (newBool == true) {
+                              if (selected == true) {
                                 _selectedRows.add(index);
                               } else {
                                 _selectedRows.remove(index);
@@ -170,8 +149,8 @@ class _PostManagementPageState extends State<PostManagementPage> {
                           },
                           cells: [
                             DataCell(Text(post.title)),
-                            DataCell(Text(post.author!.username)),
-                            DataCell(Text(post.createdAt!)),
+                            DataCell(Text(post.author?.username ?? "-")),
+                            DataCell(Text(post.createdAt ?? "-")),
                             DataCell(
                               IconButton(
                                 icon: const Icon(
@@ -197,9 +176,6 @@ class _PostManagementPageState extends State<PostManagementPage> {
                                             context.read<PostBloc>().add(
                                               DeletePost(post.id),
                                             );
-                                            // setState(() {
-                                            //   posts.removeAt(index);
-                                            // });
                                             Navigator.of(context).pop();
                                           },
                                           child: const Text(
@@ -222,10 +198,12 @@ class _PostManagementPageState extends State<PostManagementPage> {
               ),
             );
           }
+
           if (state is PostsFailure) {
             return Center(child: Text(state.message));
           }
-          return SizedBox.shrink();
+
+          return const SizedBox.shrink();
         },
       ),
     );

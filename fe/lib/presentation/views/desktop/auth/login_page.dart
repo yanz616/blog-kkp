@@ -23,7 +23,7 @@ class DesktopLoginPage extends StatefulWidget {
 class _DesktopLoginPageState extends State<DesktopLoginPage> {
   late TextEditingController _emailController;
   late TextEditingController _passController;
-  bool _isObscure = true;
+  // bool _isObscure = true;
 
   Future<void> isAuthenticated() async {
     final token = await LocalStorage.getString();
@@ -235,7 +235,7 @@ class _DesktopLoginPageState extends State<DesktopLoginPage> {
                           const Gap(16.0),
                           TextFormField(
                             controller: _passController,
-                            obscureText: _isObscure,
+                            obscureText: true,
                             decoration: InputDecoration(
                               labelText: 'Kata Sandi',
                               prefixIcon: const Icon(
