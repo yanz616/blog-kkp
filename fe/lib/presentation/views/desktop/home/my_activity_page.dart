@@ -111,10 +111,10 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
-                            childAspectRatio: 0.85,
-                            crossAxisSpacing: 16.0,
+                            // childAspectRatio: 0.85,
+                            crossAxisSpacing: 10.0,
                             mainAxisSpacing: 18.0,
-                            mainAxisExtent: 380,
+                            mainAxisExtent: 300,
                           ),
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
