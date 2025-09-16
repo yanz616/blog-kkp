@@ -4,6 +4,7 @@ import 'package:fe/presentation/blocs/posts/post_event.dart';
 import 'package:fe/presentation/blocs/posts/post_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class PostManagementPage extends StatefulWidget {
   const PostManagementPage({super.key});
@@ -21,7 +22,16 @@ class _PostManagementPageState extends State<PostManagementPage> {
     context.read<PostBloc>().add(FetchPosts());
   }
 
-  /// Hapus banyak postingan berdasarkan ID yang sudah dichecklist
+  String _formatDate(String? rawDate) {
+    if (rawDate == null || rawDate.isEmpty) return "-";
+    try {
+      final date = DateTime.parse(rawDate);
+      return DateFormat("dd/MM/yyyy HH:mm").format(date);
+    } catch (_) {
+      return rawDate;
+    }
+  }
+
   void _deleteSelectedPosts(List<PostModel> posts) {
     final idsToDelete = _selectedRows.map((i) => posts[i].id).toList();
 
@@ -35,7 +45,18 @@ class _PostManagementPageState extends State<PostManagementPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${idsToDelete.length} postingan berhasil dihapus!'),
+        backgroundColor: Colors.red.shade600,
+        behavior: SnackBarBehavior.floating,
+        content: Row(
+          children: [
+            const Icon(Icons.delete, color: Colors.white),
+            const SizedBox(width: 12),
+            Text(
+              '${idsToDelete.length} postingan berhasil dihapus!',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -67,7 +88,12 @@ class _PostManagementPageState extends State<PostManagementPage> {
             final posts = state.allPosts;
 
             if (posts.isEmpty) {
-              return const Center(child: Text("Tidak ada Postingan"));
+              return const Center(
+                child: Text(
+                  "Tidak ada Postingan",
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+              );
             }
 
             return SingleChildScrollView(
@@ -88,49 +114,38 @@ class _PostManagementPageState extends State<PostManagementPage> {
                     'Kelola semua postingan kegiatan magang.',
                     style: TextStyle(fontSize: 16, color: Color(0xFF757575)),
                   ),
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 24.0),
 
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(16.0),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: DataTable(
                       showCheckboxColumn: true,
+                      headingRowColor: MaterialStateProperty.all(
+                        const Color(0xFF1565C0),
+                      ),
+                      headingTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      dataRowHeight: 60,
+                      dividerThickness: 0.4,
                       columns: const [
-                        DataColumn(
-                          label: Text(
-                            'Judul',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Penulis',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Tanggal',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Aksi',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                        DataColumn(label: Text('Judul')),
+                        DataColumn(label: Text('Penulis')),
+                        DataColumn(label: Text('Tanggal')),
+                        DataColumn(label: Text('Aksi')),
                       ],
                       rows: List.generate(posts.length, (index) {
                         final post = posts[index];
@@ -138,6 +153,12 @@ class _PostManagementPageState extends State<PostManagementPage> {
 
                         return DataRow(
                           selected: isSelected,
+                          color:
+                              MaterialStateProperty.resolveWith<Color?>((states) {
+                            return index.isEven
+                                ? Colors.white
+                                : const Color(0xFFF5F7FA);
+                          }),
                           onSelectChanged: (bool? selected) {
                             setState(() {
                               if (selected == true) {
@@ -150,13 +171,11 @@ class _PostManagementPageState extends State<PostManagementPage> {
                           cells: [
                             DataCell(Text(post.title)),
                             DataCell(Text(post.author?.username ?? "-")),
-                            DataCell(Text(post.createdAt ?? "-")),
+                            DataCell(Text(_formatDate(post.createdAt))),
                             DataCell(
                               IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
+                                icon: const Icon(Icons.delete,
+                                    color: Colors.red),
                                 onPressed: () {
                                   showDialog(
                                     context: context,
@@ -171,17 +190,19 @@ class _PostManagementPageState extends State<PostManagementPage> {
                                               Navigator.of(context).pop(),
                                           child: const Text('Batal'),
                                         ),
-                                        TextButton(
+                                        ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                            foregroundColor: Colors.white,
+                                          ),
                                           onPressed: () {
                                             context.read<PostBloc>().add(
-                                              DeletePost(post.id),
-                                            );
+                                                  DeletePost(post.id),
+                                                );
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text(
-                                            'Hapus',
-                                            style: TextStyle(color: Colors.red),
-                                          ),
+                                          icon: const Icon(Icons.delete),
+                                          label: const Text('Hapus'),
                                         ),
                                       ],
                                     ),

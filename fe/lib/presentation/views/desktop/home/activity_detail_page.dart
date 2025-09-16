@@ -21,6 +21,7 @@ class DesktopActivityDetailPage extends StatelessWidget {
       document: doc,
       selection: const TextSelection.collapsed(offset: 0),
     );
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Padding(
@@ -28,17 +29,16 @@ class DesktopActivityDetailPage extends StatelessWidget {
         child: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () => Navigator.of(context).pop(),
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
       ),
-
       body: Padding(
-        padding: const EdgeInsets.all(32), // lebih lega
+        padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
           child: Center(
             child: Container(
-              width: 900,
-              padding: const EdgeInsets.all(40),
+              width: 1200,
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 32),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
@@ -51,75 +51,10 @@ class DesktopActivityDetailPage extends StatelessWidget {
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  // Hero Image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      height: 420,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColors.lightGray,
-                        image: post.image != null
-                            ? DecorationImage(
-                                image: NetworkImage(post.image!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: post.image == null
-                          ? const Center(
-                              child: Icon(
-                                Icons.photo_library_outlined,
-                                size: 80,
-                                color: AppColors.mediumGray,
-                              ),
-                            )
-                          : null,
-                    ),
-                  ),
-
-                  const Gap(40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 22,
-                        backgroundImage: NetworkImage(
-                          post.author!.avatar.toString(),
-                        ),
-                      ),
-                      const Gap(12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PoppinText(
-                            text: post.author!.username,
-                            styles: StyleText(
-                              size: 16,
-                              weight: AppWeights.semiBold,
-                              color: AppColors.darkGray,
-                            ),
-                          ),
-                          const Gap(2),
-                          PoppinText(
-                            text: DateTimeHelper.formatDateTimeLong(
-                              post.createdAt!,
-                            ),
-                            styles: StyleText(
-                              size: 14,
-                              color: AppColors.mediumGray,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-
-                  // Author + Date
-                  const Gap(40),
-                  // Judul
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Judul artikel
                   PoppinText(
                     text: post.title,
                     styles: StyleText(
@@ -127,15 +62,52 @@ class DesktopActivityDetailPage extends StatelessWidget {
                       weight: AppWeights.bold,
                       color: AppColors.darkGray,
                     ),
-                    textAlign: TextAlign.center,
                   ),
 
-                  const Gap(24),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 750),
-                    child: QuillEditor.basic(controller: controller),
+                  const Gap(12),
+
+                  // Author + Date
+                  PoppinText(
+                    text:
+                        "By ${post.author!.username} · ${DateTimeHelper.formatDateTimeLong(post.createdAt!)}",
+                    styles: StyleText(size: 16, color: AppColors.mediumGray),
                   ),
-                  // Deskripsi
+
+                  const Gap(32),
+
+                  // Hero Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      height: 560,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.lightGray,
+                        image:
+                            post.image != null
+                                ? DecorationImage(
+                                  image: NetworkImage(post.image!),
+                                  fit: BoxFit.cover,
+                                )
+                                : null,
+                      ),
+                      child:
+                          post.image == null
+                              ? const Center(
+                                child: Icon(
+                                  Icons.photo_library_outlined,
+                                  size: 80,
+                                  color: AppColors.mediumGray,
+                                ),
+                              )
+                              : null,
+                    ),
+                  ),
+
+                  const Gap(32),
+
+                  // Isi Artikel
+                  QuillEditor.basic(controller: controller),
                 ],
               ),
             ),
