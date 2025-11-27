@@ -23,6 +23,11 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _usernameController;
+  late TextEditingController _internshipStartDateController;
+  late TextEditingController _internshipEndDateController;
+  late TextEditingController _internshipPositionController;
+  late TextEditingController _internshipDivisionController;
+  late TextEditingController _schoolController;
   XFile? _selectedAvatar;
   Uint8List? _avatarBytes;
 
@@ -31,12 +36,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _usernameController = TextEditingController(
       text: widget.userData!.username,
     );
+    _internshipStartDateController = TextEditingController(
+      text: widget.userData!.internshipStartDate ?? '',
+    );
+    _internshipEndDateController = TextEditingController(
+      text: widget.userData!.internshipEndDate ?? '',
+    );
+    _internshipPositionController = TextEditingController(
+      text: widget.userData!.internshipPosition ?? '',
+    );
+    _internshipDivisionController = TextEditingController(
+      text: widget.userData!.internshipDivision ?? '',
+    );
+    _schoolController = TextEditingController(
+      text: widget.userData!.school ?? '',
+    );
     super.initState();
   }
 
   @override
   void dispose() {
     _usernameController.dispose();
+    _internshipStartDateController.dispose();
+    _internshipEndDateController.dispose();
+    _internshipPositionController.dispose();
+    _internshipDivisionController.dispose();
+    _schoolController.dispose();
     super.dispose();
   }
 
@@ -51,10 +76,95 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> _selectStartDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _internshipStartDateController.text.isNotEmpty
+          ? DateTime.parse(_internshipStartDateController.text)
+          : DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.lightBlue,
+              onPrimary: AppColors.white,
+              onSurface: AppColors.darkGray,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.lightBlue,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _internshipStartDateController.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      });
+    }
+  }
+
+  Future<void> _selectEndDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _internshipEndDateController.text.isNotEmpty
+          ? DateTime.parse(_internshipEndDateController.text)
+          : DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.lightBlue,
+              onPrimary: AppColors.white,
+              onSurface: AppColors.darkGray,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.lightBlue,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _internshipEndDateController.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      });
+    }
+  }
+
   void _submit() {
     final request = UpdateUserRequest(
       username: _usernameController.text.trim(),
       avatar: _selectedAvatar,
+      internshipStartDate: _internshipStartDateController.text.trim().isEmpty 
+          ? null 
+          : _internshipStartDateController.text.trim(),
+      internshipEndDate: _internshipEndDateController.text.trim().isEmpty 
+          ? null 
+          : _internshipEndDateController.text.trim(),
+      internshipPosition: _internshipPositionController.text.trim().isEmpty 
+          ? null 
+          : _internshipPositionController.text.trim(),
+      internshipDivision: _internshipDivisionController.text.trim().isEmpty 
+          ? null 
+          : _internshipDivisionController.text.trim(),
+      school: _schoolController.text.trim().isEmpty 
+          ? null 
+          : _schoolController.text.trim(),
     );
 
     context.read<AuthBloc>().add(UpdateUserEvent(request, widget.userData!.id));
@@ -212,6 +322,140 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+
+                    const Gap(40),
+
+                    // Judul section Internship
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: PoppinText(
+                        text: "Informasi Magang",
+                        styles: StyleText(
+                          size: 18,
+                          weight: AppWeights.bold,
+                          color: AppColors.darkGray,
+                        ),
+                      ),
+                    ),
+                    const Gap(16),
+
+                    // Input School
+                    TextField(
+                      controller: _schoolController,
+                      decoration: InputDecoration(
+                        labelText: 'Asal Sekolah/Universitas',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+
+                    // Input Internship Position
+                    TextField(
+                      controller: _internshipPositionController,
+                      decoration: InputDecoration(
+                        labelText: 'Posisi Magang',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+
+                    // Input Internship Division
+                    TextField(
+                      controller: _internshipDivisionController,
+                      decoration: InputDecoration(
+                        labelText: 'Divisi Magang',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+
+                    // Input Internship Start Date with Date Picker
+                    TextField(
+                      controller: _internshipStartDateController,
+                      readOnly: true,
+                      onTap: _selectStartDate,
+                      decoration: InputDecoration(
+                        labelText: 'Tanggal Mulai Magang',
+                        hintText: 'Pilih tanggal mulai',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        hintStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontSize: 14,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: const Icon(
+                          Icons.calendar_today,
+                          color: AppColors.lightBlue,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+
+                    // Input Internship End Date with Date Picker
+                    TextField(
+                      controller: _internshipEndDateController,
+                      readOnly: true,
+                      onTap: _selectEndDate,
+                      decoration: InputDecoration(
+                        labelText: 'Tanggal Selesai Magang',
+                        hintText: 'Pilih tanggal selesai',
+                        labelStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontWeight: AppWeights.regular,
+                        ),
+                        hintStyle: const TextStyle(
+                          color: AppColors.mediumGray,
+                          fontSize: 14,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.youngGray,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: const Icon(
+                          Icons.calendar_today,
+                          color: AppColors.lightBlue,
+                          size: 20,
                         ),
                       ),
                     ),

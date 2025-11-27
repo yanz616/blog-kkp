@@ -34,7 +34,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           Expanded(
             flex: 3,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(32.0),
+              padding: const EdgeInsets.only(top: 32, bottom: 32, left: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -115,9 +115,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                   BlocBuilder<PostBloc, PostState>(
                     builder: (context, state) {
                       if (state is PostsLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return const Center(child: CircularProgressIndicator());
                       } else if (state is PostsLoaded) {
                         final posts = state.allPosts;
                         if (posts.isEmpty) {
@@ -133,10 +131,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 24,
-                            mainAxisSpacing: 24,
-                          ),
+                                crossAxisCount: 4,
+                                crossAxisSpacing: 24,
+                                mainAxisSpacing: 24,
+                              ),
                           itemCount: posts.length,
                           itemBuilder: (context, index) {
                             final item = posts[index];
@@ -149,10 +147,10 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        DesktopActivityDetailPage(
-                                      post: item,
-                                    ),
+                                    builder:
+                                        (context) => DesktopActivityDetailPage(
+                                          post: item,
+                                        ),
                                   ),
                                 );
                               },
@@ -175,7 +173,7 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
           Expanded(
             flex: 1,
             child: Container(
-              padding: const EdgeInsets.all(32),
+              padding: const EdgeInsets.only(top: 31, bottom: 31, right: 20),
               height: double.infinity,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,8 +209,11 @@ class _DesktopHomePageState extends State<DesktopHomePage> {
                                 () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          DesktopActivityDetailPage(post: item),
+                                      builder:
+                                          (context) =>
+                                              DesktopActivityDetailPage(
+                                                post: item,
+                                              ),
                                     ),
                                   );
                                 },

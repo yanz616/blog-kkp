@@ -65,6 +65,15 @@ class DesktopActivityDetailPage extends StatelessWidget {
                   ),
 
                   const Gap(12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                post.author!.avatar ?? "https://picsum.photos/80/80",
+                height: 48,
+                width: 48,
+                fit: BoxFit.cover,
+              ),
+            ),
 
                   // Author + Date
                   PoppinText(

@@ -38,16 +38,40 @@ class RegisterRequest {
 class UpdateUserRequest {
   final String username;
   final XFile? avatar;
+  final String? internshipStartDate;
+  final String? internshipEndDate;
+  final String? internshipPosition;
+  final String? internshipDivision;
+  final String? school;
 
-  UpdateUserRequest({required this.username, this.avatar});
+  UpdateUserRequest({
+    required this.username,
+    this.avatar,
+    this.internshipStartDate,
+    this.internshipEndDate,
+    this.internshipPosition,
+    this.internshipDivision,
+    this.school,
+  });
 
   Map<String, String> toMap() {
-    return {'username': username};
+    final map = <String, String>{'username': username};
+    if (internshipStartDate != null) map['internshipStartDate'] = internshipStartDate!;
+    if (internshipEndDate != null) map['internshipEndDate'] = internshipEndDate!;
+    if (internshipPosition != null) map['internshipPosition'] = internshipPosition!;
+    if (internshipDivision != null) map['internshipDivision'] = internshipDivision!;
+    if (school != null) map['school'] = school!;
+    return map;
   }
 
   // Untuk multipart (support Web & Mobile)
   Future<void> applyToMultipart(http.MultipartRequest request) async {
     request.fields['username'] = username;
+    if (internshipStartDate != null) request.fields['internshipStartDate'] = internshipStartDate!;
+    if (internshipEndDate != null) request.fields['internshipEndDate'] = internshipEndDate!;
+    if (internshipPosition != null) request.fields['internshipPosition'] = internshipPosition!;
+    if (internshipDivision != null) request.fields['internshipDivision'] = internshipDivision!;
+    if (school != null) request.fields['school'] = school!;
 
     if (avatar != null) {
       final bytes = await avatar!.readAsBytes();
