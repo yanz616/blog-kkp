@@ -1,6 +1,6 @@
 # fe
 
-A new Flutter project.
+a flutter project to support the KKP course which will be held from 13 August to 13 September 2025 at Diskominfotik NTB
 
 ## Getting Started
 

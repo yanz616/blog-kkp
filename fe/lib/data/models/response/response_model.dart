@@ -51,10 +51,6 @@ class ErrorResponse {
   });
 
   factory ErrorResponse.fromJson(Map<String, dynamic> json) {
-    // if (json['statusCode'] == null) {
-    //   throw ArgumentError('Missing required field: statusCode');
-    // }
-
     return ErrorResponse(
       success: json['success'] ?? false,
       statusCode: json['statusCode'] is int

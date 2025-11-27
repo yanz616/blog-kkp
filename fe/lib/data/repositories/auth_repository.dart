@@ -29,41 +29,44 @@ class AuthRepository {
           jsonData,
           (data) => User.fromJson(data),
         );
-        await LocalStorage.setString(res.data.token!);
-        await LocalStorage.setId(res.data.id);
-        await LocalStorage.setUsername(res.data.username);
-        await LocalStorage.setEmail(res.data.email);
-        await LocalStorage.setAvatar(res.data.avatar ?? "");
-        await LocalStorage.setCreatedAt(res.data.createdAt!);
-        await LocalStorage.setIsAdmin(res.data.isAdmin);
-        await LocalStorage.setInternshipDivision(res.data.internshipDivision!);
-        if (res.data.internshipStartDate != null) {
-          await LocalStorage.setInternshipStartDate(
-            res.data.internshipStartDate!,
-          );
+
+        final user = res.data;
+
+        // ⬇ Tambahan: cek null agar tidak crash
+        if (user.token != null) {
+          await LocalStorage.setString(user.token!);
         }
-        if (res.data.internshipEndDate != null) {
-          await LocalStorage.setInternshipEndDate(res.data.internshipEndDate!);
+
+        await LocalStorage.setId(user.id);
+        await LocalStorage.setUsername(user.username ?? ""); // <-- Null-safe
+        await LocalStorage.setEmail(user.email ?? ""); // <-- Null-safe
+        await LocalStorage.setAvatar(user.avatar ?? ""); // <-- Null-safe
+        await LocalStorage.setCreatedAt(user.createdAt ?? ""); // <-- Null-safe
+
+        // ⬇ Field opsional disimpan hanya jika tidak null
+        await LocalStorage.setIsAdmin(user.isAdmin ?? false); // <-- Null-safe
+
+        if (user.internshipDivision != null) {
+          await LocalStorage.setInternshipDivision(user.internshipDivision!);
         }
-        if (res.data.internshipPosition != null) {
-          await LocalStorage.setInternshipPosition(
-            res.data.internshipPosition!,
-          );
+        if (user.internshipStartDate != null) {
+          await LocalStorage.setInternshipStartDate(user.internshipStartDate!);
         }
-        if (res.data.internshipDivision != null) {
-          await LocalStorage.setInternshipDivision(
-            res.data.internshipDivision!,
-          );
+        if (user.internshipEndDate != null) {
+          await LocalStorage.setInternshipEndDate(user.internshipEndDate!);
         }
-        if (res.data.school != null) {
-          await LocalStorage.setSchool(res.data.school!);
+        if (user.internshipPosition != null) {
+          await LocalStorage.setInternshipPosition(user.internshipPosition!);
         }
+        if (user.school != null) {
+          await LocalStorage.setSchool(user.school!);
+        }
+
         return res;
       } else {
         return ErrorResponse.fromJson(jsonData);
       }
     } catch (e) {
-      // print(e);
       return ErrorResponse(
         success: false,
         statusCode: 500,
@@ -86,7 +89,7 @@ class AuthRepository {
       if (response.statusCode == 201) {
         return SuccessResponse<User>.fromJson(
           jsonData,
-          (data) => User.fromJson(data), //callback untuk parsing data
+          (data) => User.fromJson(data),
         );
       } else {
         return ErrorResponse.fromJson(jsonData);
@@ -100,6 +103,7 @@ class AuthRepository {
     }
   }
 
+  // Update user
   Future<dynamic> updateUser(UpdateUserRequest request, int id) async {
     final token = await LocalStorage.getString();
     if (token == null) throw Exception("Token Tidak Ditemukan");
@@ -111,32 +115,37 @@ class AuthRepository {
       // Header Authorization
       multipartRequest.headers['Authorization'] = 'Bearer $token';
 
-      // Tambahkan field text
+      // Field wajib
       multipartRequest.fields['username'] = request.username;
+
+      // Field opsional (NULL-safe)
       if (request.internshipStartDate != null) {
         multipartRequest.fields['internshipStartDate'] =
             request.internshipStartDate!;
       }
+
       if (request.internshipEndDate != null) {
         multipartRequest.fields['internshipEndDate'] =
             request.internshipEndDate!;
       }
+
       if (request.internshipPosition != null) {
         multipartRequest.fields['internshipPosition'] =
             request.internshipPosition!;
       }
+
       if (request.internshipDivision != null) {
         multipartRequest.fields['internshipDivision'] =
             request.internshipDivision!;
       }
+
       if (request.school != null) {
         multipartRequest.fields['school'] = request.school!;
       }
 
-      // Tambahkan file avatar jika ada
+      // Upload avatar opsional
       if (request.avatar != null) {
         if (kIsWeb) {
-          // WEB: ambil bytes
           final bytes = await request.avatar!.readAsBytes();
           multipartRequest.files.add(
             http.MultipartFile.fromBytes(
@@ -146,14 +155,12 @@ class AuthRepository {
             ),
           );
         } else {
-          // MOBILE: pakai path
           multipartRequest.files.add(
             await http.MultipartFile.fromPath('avatar', request.avatar!.path),
           );
         }
       }
 
-      // Kirim request
       final streamedResponse = await multipartRequest.send();
       final response = await http.Response.fromStream(streamedResponse);
 
@@ -173,7 +180,10 @@ class AuthRepository {
           jsonData,
           (data) => User.fromJson(data),
         );
-        await LocalStorage.setUsername(user.data.username);
+
+        // ⬇ Null-safe update LocalStorage
+        await LocalStorage.setUsername(user.data.username ?? "");
+
         if (user.data.avatar != null) {
           await LocalStorage.setAvatar(user.data.avatar!);
         }
@@ -198,6 +208,7 @@ class AuthRepository {
         if (user.data.school != null) {
           await LocalStorage.setSchool(user.data.school!);
         }
+
         return user;
       } else {
         return ErrorResponse.fromJson(jsonData);
