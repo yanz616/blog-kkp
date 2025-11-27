@@ -96,7 +96,8 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
       ),
       body: Center(
         child: Container(
-          width: 700,
+          width: double.infinity,
+          margin: EdgeInsets.symmetric(horizontal: 180, vertical: 46),
           padding: const EdgeInsets.all(32.0),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -181,18 +182,20 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                       ),
                       child: Column(
                         children: [
-                          QuillSimpleToolbar(
-                            controller: _contentController,
-
-                            config: QuillSimpleToolbarConfig(
-                              multiRowsDisplay: false,
-                              showAlignmentButtons: true,
-                              showBackgroundColorButton: true,
-                              showColorButton: true,
+                          Align(
+                          alignment: Alignment.centerLeft,
+                            child: QuillSimpleToolbar(
+                              controller: _contentController,
+                              config: QuillSimpleToolbarConfig(
+                                // multiRowsDisplay: false,
+                                // showAlignmentButtons: true,
+                                // showBackgroundColorButton: true,
+                                // showColorButton: true,
+                              ),
                             ),
                           ),
                           SizedBox(
-                            height: 200,
+                            height: 500,
                             child: QuillEditor.basic(
                               controller: _contentController,
                               config: QuillEditorConfig(
@@ -210,7 +213,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                     GestureDetector(
                       onTap: _pickImage,
                       child: Container(
-                        height: 200,
+                        height: 600,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.grey[100],
@@ -222,7 +225,7 @@ class _DesktopAddActivityPageState extends State<DesktopAddActivityPage> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: Image.network(
                                   _selectedImage!.path,
-                                  height: 200,
+                                  height: 600,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
                                 ),

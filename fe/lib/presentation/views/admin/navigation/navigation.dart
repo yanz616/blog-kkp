@@ -20,77 +20,127 @@ class AdminMainScaffold extends StatefulWidget {
 class _AdminMainScaffoldState extends State<AdminMainScaffold> {
   late int _selectedIndex;
 
+  final List<Widget> _pages = const [
+    AdminDashboardPage(),
+    PostManagementPage(),
+    UserManagementPage(),
+  ];
+
   @override
   void initState() {
-    _selectedIndex = widget.index ?? 0;
     super.initState();
+    _selectedIndex = widget.index ?? 0;
   }
 
-  final List<Widget> _pages = [
-    const AdminDashboardPage(),
-    const PostManagementPage(),
-    const UserManagementPage(),
-  ];
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required String label,
+  }) {
+    final bool isSelected = _selectedIndex == index;
+
+    return InkWell(
+      onTap: () => setState(() => _selectedIndex = index),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color:
+              isSelected
+                  ? Colors.white.withValues(alpha: 0.15)
+                  : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: isSelected ? Colors.white : Colors.white70),
+            const SizedBox(width: 12),
+            Expanded(
+              child: PoppinText(
+                text: label,
+                styles: StyleText(
+                  color: isSelected ? Colors.white : Colors.white70,
+                  weight: isSelected ? AppWeights.semiBold : AppWeights.regular,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          // Sidebar Navigasi
+          // Sidebar elegan
           Container(
-            width: 280,
-            color: const Color(0xFF003366), // Biru Tua Diskominfotik
+            width: 350,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColors.oldBlue, AppColors.lightBlue],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 12,
+                  offset: const Offset(2, 0),
+                ),
+              ],
+            ),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24.0),
-                  child: Text(
-                    'Panel Admin',
-                    style: TextStyle(
-                      color: Color(0xFFE1AD01), // Emas
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 20),
+                  child: Row(
+                  spacing: 12,
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/logo/ikpLogo.png'),
+                          ),
+                        ),
+                      ),
+                  
+                      PoppinText(
+                        text: 'Panel Admin',
+                        styles: StyleText(
+                          color: Colors.white,
+                          size: 22,
+                          weight: AppWeights.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.dashboard, color: Colors.white),
-                  title: const Text(
-                    'Dasbor',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  selected: _selectedIndex == 0,
-                  selectedTileColor: const Color(
-                    0xFFE1AD01,
-                  ).withValues(alpha: 0.5),
-                  onTap: () => setState(() => _selectedIndex = 0),
+                // Header
+
+                // Nav Items
+                _buildNavItem(index: 0, icon: Icons.dashboard, label: 'Dashboard'),
+                _buildNavItem(
+                  index: 1,
+                  icon: Icons.article,
+                  label: 'Manajemen Postingan',
                 ),
-                ListTile(
-                  leading: const Icon(Icons.article, color: Colors.white),
-                  title: const Text(
-                    'Manajemen Postingan',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  selected: _selectedIndex == 1,
-                  selectedTileColor: const Color(
-                    0xFFE1AD01,
-                  ).withValues(alpha: 0.5),
-                  onTap: () => setState(() => _selectedIndex = 1),
+                _buildNavItem(
+                  index: 2,
+                  icon: Icons.people,
+                  label: 'Manajemen Pengguna',
                 ),
-                ListTile(
-                  leading: const Icon(Icons.people, color: Colors.white),
-                  title: const Text(
-                    'Manajemen Pengguna',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  selected: _selectedIndex == 2,
-                  selectedTileColor: const Color(
-                    0xFFE1AD01,
-                  ).withValues(alpha: 0.5),
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
+
                 const Spacer(),
+
+                const Divider(color: Colors.white30, indent: 12, endIndent: 12),
+
+                // Logout
                 InkWell(
                   onTap: () {
                     showDialog(
@@ -119,8 +169,8 @@ class _AdminMainScaffoldState extends State<AdminMainScaffold> {
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () =>
-                                  Navigator.of(dialogContext).pop(),
+                              onPressed:
+                                  () => Navigator.of(dialogContext).pop(),
                               child: PoppinText(
                                 text: 'Batal',
                                 styles: StyleText(color: AppColors.darkGray),
@@ -145,15 +195,16 @@ class _AdminMainScaffoldState extends State<AdminMainScaffold> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const DesktopLoginPage(),
+                                      builder:
+                                          (BuildContext context) =>
+                                              const DesktopLoginPage(),
                                     ),
                                     (Route<dynamic> route) => false,
                                   );
                                 });
                               },
                               child: PoppinText(
-                                text: "Logout",
+                                text: 'Logout',
                                 styles: StyleText(color: AppColors.white),
                               ),
                             ),
@@ -162,11 +213,26 @@ class _AdminMainScaffoldState extends State<AdminMainScaffold> {
                       },
                     );
                   },
-                  child: const ListTile(
-                    leading: Icon(Icons.logout, color: Colors.white),
-                    title: Text(
-                      'Keluar',
-                      style: TextStyle(color: Colors.white),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.logout, color: Colors.white70),
+                        SizedBox(width: 12),
+                        Text('Keluar', style: TextStyle(color: Colors.white70)),
+                      ],
                     ),
                   ),
                 ),
@@ -174,7 +240,7 @@ class _AdminMainScaffoldState extends State<AdminMainScaffold> {
             ),
           ),
 
-          // Area Konten Utama
+          // Konten utama
           Expanded(
             child: IndexedStack(index: _selectedIndex, children: _pages),
           ),

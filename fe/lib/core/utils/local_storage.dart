@@ -105,4 +105,84 @@ class LocalStorage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('isAdmin');
   }
+
+  // Internship Start Date
+  static Future<void> setInternshipStartDate(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('internshipStartDate', value);
+  }
+
+  static Future<String?> getInternshipStartDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('internshipStartDate');
+  }
+
+  static Future<void> removeInternshipStartDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('internshipStartDate');
+  }
+
+  // Internship End Date
+  static Future<void> setInternshipEndDate(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('internshipEndDate', value);
+  }
+
+  static Future<String?> getInternshipEndDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('internshipEndDate');
+  }
+
+  static Future<void> removeInternshipEndDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('internshipEndDate');
+  }
+
+  // Internship Position
+  static Future<void> setInternshipPosition(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('internshipPosition', value);
+  }
+
+  static Future<String?> getInternshipPosition() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('internshipPosition');
+  }
+
+  static Future<void> removeInternshipPosition() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('internshipPosition');
+  }
+
+  // Internship Division
+  static Future<void> setInternshipDivision(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('internshipDivision', value);
+  }
+
+  static Future<String?> getInternshipDivision() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('internshipDivision');
+  }
+
+  static Future<void> removeInternshipDivision() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('internshipDivision');
+  }
+
+  // School
+  static Future<void> setSchool(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('school', value);
+  }
+
+  static Future<String?> getSchool() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('school');
+  }
+
+  static Future<void> removeSchool() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('school');
+  }
 }

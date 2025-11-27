@@ -110,11 +110,11 @@ class _DesktopMyActivitiesPageState extends State<DesktopMyActivitiesPage> {
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
+                            crossAxisCount: 6,
                             // childAspectRatio: 0.85,
                             crossAxisSpacing: 10.0,
                             mainAxisSpacing: 18.0,
-                            mainAxisExtent: 300,
+                            // mainAxisExtent: 400,
                           ),
                       itemCount: posts.length,
                       itemBuilder: (context, index) {

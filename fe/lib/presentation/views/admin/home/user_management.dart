@@ -13,32 +13,13 @@ class UserManagementPage extends StatefulWidget {
 }
 
 class _UserManagementPageState extends State<UserManagementPage> {
-  // Set untuk menyimpan indeks pengguna yang dipilih
   final Set<int> _selectedRows = {};
+
   @override
   void initState() {
     context.read<AdminBloc>().add(FetchUsers());
     super.initState();
   }
-
-  // void _deleteSelectedUsers() {
-  //   // Buat daftar indeks yang akan dihapus, urutkan dari yang terbesar agar tidak mengganggu indeks saat dihapus
-  //   final List<int> sortedIndices = _selectedRows.toList()
-  //     ..sort((a, b) => b.compareTo(a));
-
-  //   setState(() {
-  //     for (final index in sortedIndices) {
-  //       users.removeAt(index);
-  //     }
-  //     _selectedRows.clear(); // Bersihkan pilihan setelah dihapus
-  //   });
-
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('${sortedIndices.length} pengguna berhasil dihapus!'),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +27,18 @@ class _UserManagementPageState extends State<UserManagementPage> {
       body: BlocBuilder<AdminBloc, AdminState>(
         builder: (context, state) {
           if (state is LoadingAdminState) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (state is LoadedUsers) {
             final List<User> users = state.users;
             if (users.isEmpty) {
-              return Center(child: Text('User Tidak ada'));
+              return const Center(child: Text('User Tidak ada'));
             }
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // ... (Header halaman sama seperti sebelumnya) ...
                   const Text(
                     'Manajemen Pengguna',
                     style: TextStyle(
@@ -74,48 +54,37 @@ class _UserManagementPageState extends State<UserManagementPage> {
                   ),
                   const SizedBox(height: 32.0),
 
-                  // Tabel Pengguna
+                  // === Tabel Pengguna ===
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(16.0),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
                     child: DataTable(
                       showCheckboxColumn: true,
-                      columns: [
-                        DataColumn(
-                          label: Text(
-                            'Nama Peserta',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Email',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Tanggal Gabung',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Aksi',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                      headingRowColor: MaterialStateProperty.all(
+                        const Color(0xFF1565C0), // biru tua
+                      ),
+                      headingTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      dataRowHeight: 60,
+                      dividerThickness: 0.4,
+                      columns: const [
+                        DataColumn(label: Text('Nama Peserta')),
+                        DataColumn(label: Text('Email')),
+                        DataColumn(label: Text('Tanggal Gabung')),
+                        DataColumn(label: Text('Aksi')),
                       ],
                       rows: List.generate(users.length, (index) {
                         final user = users[index];
@@ -123,6 +92,13 @@ class _UserManagementPageState extends State<UserManagementPage> {
 
                         return DataRow(
                           selected: isSelected,
+                          color: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                              return index.isEven
+                                  ? Colors.white
+                                  : const Color(0xFFF5F7FA);
+                            },
+                          ),
                           onSelectChanged: (bool? newBool) {
                             setState(() {
                               if (newBool == true) {
@@ -135,7 +111,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
                           cells: [
                             DataCell(Text(user.username)),
                             DataCell(Text(user.email)),
-                            DataCell(Text(user.createdAt!)),
+                            DataCell(Text(user.createdAt ?? "-")),
                             DataCell(
                               IconButton(
                                 icon: const Icon(
@@ -158,12 +134,9 @@ class _UserManagementPageState extends State<UserManagementPage> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            context.read<AdminBloc>().add(
-                                              DeleteUser(user.id),
-                                            );
-                                            // setState(() {
-                                            //   users.removeAt(index);
-                                            // });
+                                            context
+                                                .read<AdminBloc>()
+                                                .add(DeleteUser(user.id));
                                             Navigator.of(context).pop();
                                           },
                                           child: const Text(
@@ -189,9 +162,7 @@ class _UserManagementPageState extends State<UserManagementPage> {
           if (state is FailureAdminState) {
             return Center(child: Text(state.message));
           }
-          return SizedBox.shrink(
-            child: Center(child: Text("ini Di dalam SizedBox")),
-          );
+          return const SizedBox.shrink();
         },
       ),
     );
